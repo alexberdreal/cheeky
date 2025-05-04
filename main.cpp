@@ -3,18 +3,27 @@
 #include <mach/thread_act.h>  // Thread function
 #include <loader/mach_object.h>
 #include <iostream>
+#include <assert.h>
 
 int main(int argc, char** argv) {
-    // get send rights to the task's kernel port 
-    // auto self = mach_task_self();
-    // uint32_t size = sizeof(task_basic_info);
-    // int buffer[sizeof(task_basic_info)];
-    // task_info(self, TASK_BASIC_INFO, static_cast<task_info_t>(buffer), static_cast<mach_msg_type_number_t*>(&size));
-    // auto casted = reinterpret_cast<task_basic_info*>(buffer);
-    // std::cout << "suspends: " << casted->suspend_count << std::endl; 
+    assert(argc == 2);
 
-    auto macho = cheekydbg::loader::MachObject::load("/Users/aberdnikov/cheekydbg/build/test");
-    macho.print_internals();
+    auto exec_path = argv[1];
+    auto object = cheekydbg::loader::MachObject::load(exec_path);
+    task_t new_task;
+    auto res = task_create(mach_task_self(), nullptr, 0, false, &new_task);
+    vm_address_t addr = 0;
+    vm_allocate(new_task, &addr, 8 * 1024 * 1024 * 1024, 0);
+    vm_map_64()
+
+    // operands = 2, add 
+
+    processor_set_tasks
+    thread_create
+    assert(res == 0);
+    arm_thread_state64_t st;   
+    // What do I need? PC = FP, SP 
+    st.__pc = 
 
     return 0;
 }

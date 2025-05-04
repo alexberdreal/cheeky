@@ -13,11 +13,25 @@ namespace cheekydbg::loader {
         using header_t = mach_header_64;
         using lc_base_t = load_command;
 
-        using lc_segment_t = segment_command_64;
-        using lc_src_version_t = source_version_command;
-        using lc_build_version_t = build_version_command;
+        using lc_segment_t              = segment_command_64;
+        using lc_symtab_t               = symtab_command;
+        using lc_dysymtab_t             = dysymtab_command;
+        using lc_load_dylib_t           = dylib_command;
+        using lc_id_dylib_t             = dylib_command;
+        using lc_load_weak_dylib_t      = dylib_command;
+        using lc_reexport_dylib_t       = dylib_command;
+        using lc_load_upward_dylib_t    = dylib_command;
+        using lc_load_dylinker_t        = dylinker_command;
+        using lc_id_dylinker_t          = dylinker_command;
+        using lc_rpath_t                = rpath_command;
+        using lc_entry_point_t          = entry_point_command;
+        using lc_function_starts_t      = linkedit_data_command;
+        using lc_data_in_code_t         = linkedit_data_command;
+        using lc_dyld_chained_fixups_t  = linkedit_data_command;
+        using lc_dyld_exports_t         = linkedit_data_command;
+
         // TODO: add the rest of load commands;
-        using lc_variant_t = std::variant<lc_segment_t, lc_src_version_t, lc_build_version_t>;
+        using lc_variant_t = std::variant<lc_segment_t>;
 
     private:
         /// Header;
@@ -43,14 +57,12 @@ namespace cheekydbg::loader {
             switch (cmd) {
                 case LC_SEGMENT_64:
                     return { load_lc_from_address_known_type<lc_segment_t>(data) };
-                case LC_BUILD_VERSION:
-                    return { load_lc_from_address_known_type<lc_build_version_t>(data) };
-                case LC_SOURCE_VERSION:
-                    return { load_lc_from_address_known_type<lc_src_version_t>(data) };
                 default:
                     return std::nullopt;
             }
         }
+
+        
     public: 
         /// Loads Mach-O executable internals from a disk
         static MachObject load(std::string_view path);
