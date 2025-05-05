@@ -34,8 +34,6 @@ namespace cheekydbg::loader {
 
         data += sizeof(header_t);
 
-        std::cout << "B";
-
         for (size_t i = 0; i < header->ncmds; ++i) {
             const auto lc_base = reinterpret_cast<lc_base_t*>(data);
         

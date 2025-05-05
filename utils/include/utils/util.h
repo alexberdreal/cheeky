@@ -38,6 +38,13 @@ struct IsValidVarType<T, std::variant<Types...>> {
         constexpr static size_t value = (std::is_same_v<Types, std::decay_t<T>> || ...);
 };
 
-constexpr uint32_t log2(uint32_t data);
+constexpr uint32_t log2(int32_t data) {
+    unsigned res = -1;   
+    while (data != 0) {
+        data >>= 1;
+        res++;
+    }
+    return res;
+};
 
 }

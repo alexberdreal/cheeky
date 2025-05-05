@@ -66,20 +66,6 @@ namespace cheekydbg::loader {
     public: 
         /// Loads Mach-O executable internals from a disk
         static MachObject load(std::string_view path);
-
-        void print_internals() {
-            std::cout << "Header: " << std::endl;
-            std::cout << "Magic num: " << _header.magic << std::endl;
-            std::cout << "Cmd size: " << _header.sizeofcmds << std::endl;
-            for (const auto& lc_var : _load_commands) {
-                std::visit([](const auto& lc) {
-                    using T = std::decay_t<decltype(lc)>;
-                    if constexpr (std::is_same_v<T, lc_segment_t>) {
-                        std::cout << "segname: " << lc.segname << std::endl;
-                    }
-                }, lc_var);
-            } 
-        }
     };
 }
 

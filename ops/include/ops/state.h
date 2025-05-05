@@ -1,16 +1,10 @@
 #pragma once
 #include <stdint.h>
 
-namespace cheeky {
+namespace cheeky::ops {
     struct State {
-        /// General-purpose registers
-        int64_t x[29];
-        /// Frame pointer (x29)
-        uint64_t fp;
-        /// Link register (x30)
-        uint64_t lr;
-        /// Stack pointer (x31)
-        uint64_t sp;
+        /// General-purpose registers + fp (x29) + lr (x30) + sp / zr (x31)
+        uint64_t x[32];
         /// Program Counter
         uint64_t pc;
         /// Flags (negative, zero, carry, overflow)
