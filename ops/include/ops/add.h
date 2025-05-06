@@ -2,7 +2,7 @@
 #include <ops/base_op.h>
 
 // 31   30  29  28  27  26  25  24  23  22  21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
-// sf   0   S   1   0   0   0   1   0   sh |            imm12                  |    Rn   |     Rd
+// sf   0   0   1   0   0   0   1   0   sh |            imm12                  |    Rn   |     Rd
 
 /*
     32-bit (sf == 0)
@@ -12,6 +12,7 @@
 */
 
 // TODO: add support of S instructions (simply update NZCV flags if bit 29 is set)
+// TODO: try partial specialization for S flag 
 
 namespace cheeky::ops {
     RegisterOperation(AddImm, 0b100010, 2, 1);

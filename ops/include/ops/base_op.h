@@ -7,7 +7,7 @@
 
 namespace cheeky::ops {
     enum class OpName {
-        AddImm, AddShExt, Sub, Orr, SubImm, SubShExt
+        AddImm, SubImm, AddsImm, SubsImm 
     };
 
     // 0b010001 (X lower bits) -> 0b01000100000000000000000000000000 (32 bits with shifted to higher)

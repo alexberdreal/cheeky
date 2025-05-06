@@ -1,6 +1,7 @@
 #include "assert.h"
 
 #include <ops/add.h>
+#include <ops/adds.h>
 #include <ops/sub.h>
 
 #include <ops/state.h>
@@ -44,6 +45,41 @@ int main() {
         sub_imm.process(sub_bits, state);
         
         assert(state.x[8] == 400);
+    }
+
+    AddsImm adds_imm;
+
+    {
+        int32_t adds_bits = 0x31001508;
+
+        assert(adds_imm.is_match(adds_bits));
+
+        adds_imm.process(adds_bits, state);
+
+        assert(state.x[8] == 405);
+        assert(!state.nzcv.any());
+
+        state.x[8] = 0xFFFFFFFF;
+
+        adds_imm.process(adds_bits, state);
+
+        assert(state.get_c_flag());
+        assert(!state.get_n_flag());
+        assert(!state.get_z_flag());
+        assert(!state.get_v_flag());
+    }
+
+    {
+        int32_t adds_bits = 0x31001508;
+
+        state.x[8] = INT32_MAX;
+
+        adds_imm.process(adds_bits, state);
+
+        assert(!state.get_c_flag());
+        assert(state.get_n_flag());
+        assert(!state.get_z_flag());
+        assert(state.get_v_flag());
     }
 
     return 0;
