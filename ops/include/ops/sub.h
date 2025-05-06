@@ -2,21 +2,21 @@
 #include <ops/base_op.h>
 
 // 31   30  29  28  27  26  25  24  23  22  21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
-// sf   0   S   1   0   0   0   1   0   sh |            imm12                  |    Rn   |     Rd
+// sf   1   0   1   0   0   0   1   0   sh |            imm12                  |    Rn   |     Rd
 
 /*
     32-bit (sf == 0)
-    ADD <Wd|WSP>, <Wn|WSP>, #<imm>{, <shift>}
+    SUB <Wd|WSP>, <Wn|WSP>, #<imm>{, <shift>}
     64-bit (sf == 1)
-    ADD <Xd|SP>, <Xn|SP>, #<imm>{, <shift>}
+    SUB <Xd|SP>, <Xn|SP>, #<imm>{, <shift>}
 */
 
 // TODO: add support of S instructions (simply update NZCV flags if bit 29 is set)
 
 namespace cheeky::ops {
-    RegisterOperation(AddImm, 0b100010, 2, 1);
+    RegisterOperation(SubImm, 0b10100010, 0, 1);
 
-    void AddImm::process(uint32_t bits, State &state) {
+    void SubImm::process(uint32_t bits, State &state) {
         auto is_sf_set = is_bit_set(bits, 31);
         auto is_sh_set = is_bit_set(bits, 22);
         
@@ -24,11 +24,11 @@ namespace cheeky::ops {
         auto rn_idx = (bits & get_mask_from_bits(5, 9)) >> 5;
         auto imm12 = (bits & get_mask_from_bits(10, 21)) >> 10;
 
-        auto add = [=](auto& rd, auto rn) { 
+        auto sub = [=](auto& rd, auto rn) { 
             if (is_sh_set) {
-                rd = rn + (imm12 << 12);
+                rd = rn - (imm12 << 12);
             } else {
-                rd = rn + imm12; 
+                rd = rn - imm12; 
             }
         };
 
@@ -38,14 +38,14 @@ namespace cheeky::ops {
             auto& rd = state.x[rd_idx];
             const auto& rn = state.x[rn_idx];
 
-            add(rd, rn);
+            sub(rd, rn);
         } else {
             // 32 bit case
 
             auto rd = reinterpret_cast<uint32_t*>(&state.x[rd_idx]);
             auto rn = reinterpret_cast<const uint32_t*>(&state.x[rn_idx]);
 
-            add(*rd, *rn);
+            sub(*rd, *rn);
         }
     }
 }

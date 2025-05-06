@@ -46,7 +46,6 @@ namespace cheeky::ops {
     // iz - insignigicant zeros
     template <OpName name, int32_t fixed_bits, int32_t sz, int32_t iz>
     class BaseOperation {
-
         bool is_match(uint32_t data) { 
             std::cerr << "instruction for " << data << " is undefined\n";
             return false;
@@ -68,15 +67,16 @@ namespace cheeky::ops {
     // bytes:              31 30 29 28 27 26 25 24 23 22 21 ...
     // instruction format: x  x  0  1  1  0  1  0  0  0  1  ... 
     // sb = 2 (number of x's), sb = 1 (only bit 29), fixed_raw = 0x11010001
+
     #define RegisterOperation(name, fixed_raw, iz, sb)                               \
     template <>                                                                      \
     class BaseOperation<OpName::name, fixed_raw, iz, sb> {                           \
     public:                                                                          \
-        static constexpr uint32_t fixed_bits = adjust_bits(fixed_raw, iz);           \
-        static constexpr uint32_t base_fixed_bits = get_base_fixed_bits(fixed_bits); \
-        static constexpr uint32_t mask = get_mask_from_fixed(fixed_raw, iz, sb);     \
-        bool is_match(uint32_t bits) { return (bits & mask) == fixed_bits; }         \
-        void process(uint32_t bits, State& state);                                   \
+        inline static constexpr uint32_t fixed_bits = adjust_bits(fixed_raw, iz);           \
+        inline static constexpr uint32_t base_fixed_bits = get_base_fixed_bits(fixed_bits); \
+        inline static constexpr uint32_t mask = get_mask_from_fixed(fixed_raw, iz, sb);     \
+        inline bool is_match(uint32_t bits) { return (bits & mask) == fixed_bits; }         \
+        inline void process(uint32_t bits, State& state);                                   \
     };                                                                               \
     using name = BaseOperation<OpName::name, fixed_raw, iz, sb>;
 }
