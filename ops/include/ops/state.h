@@ -5,7 +5,7 @@ namespace cheeky::ops {
     // TODO: change to class
     struct State {
         /// General-purpose registers + fp (x29) + lr (x30) + sp / zr (x31)
-        uint64_t x[32];
+        uint64_t r[32];
         /// Program Counter
         uint64_t pc;
         /// Flags (negative (bit 0), zero (bit 1), carry (bit 2), overflow (bit 3))

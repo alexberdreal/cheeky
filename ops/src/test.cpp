@@ -14,8 +14,8 @@ int main() {
     
     State state;
 
-    state.x[0] = 0;
-    state.x[8] = 0;
+    state.r[0] = 0;
+    state.r[8] = 0;
 
     int32_t bits = 0x11400900;
 
@@ -23,9 +23,9 @@ int main() {
 
     add_imm.process(bits, state);
 
-    assert(state.x[0] == 8192);
+    assert(state.r[0] == 8192);
 
-    state.x[8] = 500;
+    state.r[8] = 500;
     
     {
         int32_t sub_bits = 0x5100C908;
@@ -34,7 +34,7 @@ int main() {
     
         sub_imm.process(sub_bits, state);
         
-        assert(state.x[8] == 450);
+        assert(state.r[8] == 450);
     }
 
     {
@@ -44,7 +44,7 @@ int main() {
     
         sub_imm.process(sub_bits, state);
         
-        assert(state.x[8] == 400);
+        assert(state.r[8] == 400);
     }
 
     AddsImm adds_imm;
@@ -56,10 +56,10 @@ int main() {
 
         adds_imm.process(adds_bits, state);
 
-        assert(state.x[8] == 405);
+        assert(state.r[8] == 405);
         assert(!state.nzcv.any());
 
-        state.x[8] = 0xFFFFFFFF;
+        state.r[8] = 0xFFFFFFFF;
 
         adds_imm.process(adds_bits, state);
 
@@ -72,7 +72,7 @@ int main() {
     {
         int32_t adds_bits = 0x31001508;
 
-        state.x[8] = INT32_MAX;
+        state.r[8] = INT32_MAX;
 
         adds_imm.process(adds_bits, state);
 

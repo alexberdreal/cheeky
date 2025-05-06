@@ -36,15 +36,15 @@ namespace cheeky::ops {
         if (is_sf_set) {
             // 64 bit case
 
-            auto& rd = state.x[rd_idx];
-            const auto& rn = state.x[rn_idx];
+            auto& rd = state.r[rd_idx];
+            const auto& rn = state.r[rn_idx];
 
             add(rd, rn);
         } else {
             // 32 bit case
 
-            auto rd = reinterpret_cast<uint32_t*>(&state.x[rd_idx]);
-            auto rn = reinterpret_cast<const uint32_t*>(&state.x[rn_idx]);
+            auto rd = reinterpret_cast<uint32_t*>(&state.r[rd_idx]);
+            auto rn = reinterpret_cast<const uint32_t*>(&state.r[rn_idx]);
 
             add(*rd, *rn);
         }
