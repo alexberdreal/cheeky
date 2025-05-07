@@ -57,13 +57,16 @@ namespace cheeky::loader {
 
         for (auto lc_var : _load_commands) {
             std::visit([&found, this](auto& lc) {
-                if constexpr (std::is_same_v<lc_segment_t, std::decay_t<decltype(lc)>>) {
-                    auto exp_segname = "__TEXT";
-                    if (!memcmp(reinterpret_cast<const void*>(lc.segname), reinterpret_cast<const void*>(exp_segname), strlen(exp_segname))) {
-                        std::cout << "main found!" << std::endl;
-                        std::cout << "_data: " << std::hex << _data << " fileoff: " << lc.fileoff << std::endl;
-                        // TODO: should parse sections by loader as well in order to get a correct offset 
-                        found = reinterpret_cast<const uint32_t*>(_data) + (16244 / 4);
+                if constexpr (std::is_same_v<MachObject::SegmentWithSections, std::decay_t<decltype(lc)>>) {
+                    const auto seg_name = "__TEXT";
+                    const auto sect_name = "__text";
+                    if (!memcmp(reinterpret_cast<const void*>(lc.segment.segname), reinterpret_cast<const void*>(seg_name), strlen(seg_name))) {                        
+                        for (lc_section_t section : lc.sections) {
+                            if (!memcmp(reinterpret_cast<const void*>(section.sectname), reinterpret_cast<const void*>(sect_name), strlen(sect_name))) {
+                                found = reinterpret_cast<const uint32_t*>(_data) + section.offset / sizeof(section.offset);
+                                break;
+                            }
+                        }
                     }
                 }
             }, lc_var);
@@ -73,8 +76,6 @@ namespace cheeky::loader {
             std::cerr << "No text segment found, fatal error" << std::endl;
             std::terminate();
         }
-
-        std::cout << std::dec << "mmaped len " << _data_len << std::endl;
 
         return found;
     }

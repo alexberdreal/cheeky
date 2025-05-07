@@ -11,7 +11,6 @@ namespace cheeky::session {
         std::shared_ptr<ops::State> _state;
 
         std::shared_ptr<ops::BaseOperation> find_operation(uint32_t bytes) {
-            std::cout << "finding operation " << std::endl;
             auto base_bits = ops::get_base_fixed_bits(bytes);
             auto it = _ops.find(base_bits);
             while (it != _ops.end() && !it->second->is_match(bytes)) {
@@ -38,8 +37,6 @@ namespace cheeky::session {
                 std::cerr << "Instruction is not supported: " << std::hex << bytes << std::endl;
                 std::terminate();
             }
-
-            std::cout << "executing" << std::endl;
 
             assert(_state != nullptr);
 

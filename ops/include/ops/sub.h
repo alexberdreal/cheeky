@@ -22,8 +22,6 @@ namespace cheeky::ops {
     
 
     void SubImm::process(uint32_t bits, State &state) {
-        std::cout << "executing sub " << std::hex << bits << std::endl; 
-
         auto is_sf_set = is_bit_set(bits, 31);
         auto is_sh_set = is_bit_set(bits, 22);
         
