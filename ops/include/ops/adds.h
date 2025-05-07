@@ -16,7 +16,11 @@
 // TODO: try partial specialization for S flag 
 
 namespace cheeky::ops {
-    RegisterOperation(AddsImm, 0b1100010, 1, 1);
+    class AddsImm : public BaseOperation {
+    public:
+        constexpr AddsImm() : BaseOperation(0b1100010, 1, 1) {}
+        void process(uint32_t bits, State &state) override;
+    };
 
     void AddsImm::process(uint32_t bits, State &state) {
         auto is_sf_set = is_bit_set(bits, 31);

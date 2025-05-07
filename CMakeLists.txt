@@ -7,7 +7,8 @@ project(cheekydbg)
 add_subdirectory(utils)
 add_subdirectory(loader)
 add_subdirectory(ops)
+#add_subdirectory(session)
 
 add_executable(cheeky main.cpp)
 
-target_link_libraries(cheeky utils loader)
+target_link_libraries(cheeky utils loader session)

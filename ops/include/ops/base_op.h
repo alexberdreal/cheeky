@@ -16,7 +16,7 @@ namespace cheeky::ops {
         return bits << (31u - bits_len - zeros);
     }
 
-    // 0b01[000110]0010110.. -> 0b000110
+    // 0b01[000110]0010110.. -> 0b000110 (6 bits)
     constexpr uint32_t get_base_fixed_bits(uint32_t fixed) {
         return (fixed & 0x3F000000) >> 29;
     }
@@ -44,39 +44,29 @@ namespace cheeky::ops {
 
     // sz - skipped zeros
     // iz - insignigicant zeros
-    template <OpName name, int32_t fixed_bits, int32_t sz, int32_t iz>
     class BaseOperation {
-        bool is_match(uint32_t data) { 
-            std::cerr << "instruction for " << data << " is undefined\n";
-            return false;
+    private: 
+        uint32_t _fixed_bits;          
+        uint32_t _base_fixed_bits; 
+        uint32_t _mask;    
+    public: 
+        /// raw_fixed - fixed bits, starting from 1
+        /// iz (insignificant zeros) - number of zeros, at the start of fixed bits
+        /// sb (skipped bits) - number of skipped bits at the start of instruction
+        /// 
+        /// Example: 
+        /// bytes:              31 30 29 28 27 26 25 24 23 22 21 ...
+        /// instruction format: x  x  0  1  1  0  1  0  0  0  1  ... 
+        /// sb = 2 (number of x's), sb = 1 (only bit 29), raw_fixed = 0x11010001
+        constexpr BaseOperation(uint32_t raw_fixed, uint32_t iz, uint32_t sb) :
+            _fixed_bits(adjust_bits(raw_fixed, iz)), 
+            _base_fixed_bits(get_base_fixed_bits(_fixed_bits)), 
+            _mask(get_mask_from_fixed(raw_fixed, iz, sb)) {}
+
+        virtual bool is_match(uint32_t bits) {
+            return (bits & _mask) == _fixed_bits;
         }
 
-        void process(uint32_t data, State&) {
-            std::cerr << "instruction for " << data << " is undefined\n";
-        }
+        virtual void process(uint32_t data, State&) = 0;
     };
-
-
-    /// Registers a operation 
-    /// name - name of an operation class, must be present in OpName enum
-    /// fixed_raw - fixed bits, starting from 1
-    /// iz (insignificant zeros) - number of zeros, at the start of fixed bits
-    /// sb (skipped bits) - number of skipped bits at the start of instruction
-    /// 
-    /// Example: 
-    // bytes:              31 30 29 28 27 26 25 24 23 22 21 ...
-    // instruction format: x  x  0  1  1  0  1  0  0  0  1  ... 
-    // sb = 2 (number of x's), sb = 1 (only bit 29), fixed_raw = 0x11010001
-
-    #define RegisterOperation(name, fixed_raw, iz, sb)                               \
-    template <>                                                                      \
-    class BaseOperation<OpName::name, fixed_raw, iz, sb> {                           \
-    public:                                                                          \
-        inline static constexpr uint32_t fixed_bits = adjust_bits(fixed_raw, iz);           \
-        inline static constexpr uint32_t base_fixed_bits = get_base_fixed_bits(fixed_bits); \
-        inline static constexpr uint32_t mask = get_mask_from_fixed(fixed_raw, iz, sb);     \
-        inline bool is_match(uint32_t bits) { return (bits & mask) == fixed_bits; }         \
-        inline void process(uint32_t bits, State& state);                                   \
-    };                                                                               \
-    using name = BaseOperation<OpName::name, fixed_raw, iz, sb>;
 }

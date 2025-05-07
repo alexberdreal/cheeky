@@ -14,7 +14,12 @@
 // TODO: add support of S instructions (simply update NZCV flags if bit 29 is set)
 
 namespace cheeky::ops {
-    RegisterOperation(SubImm, 0b10100010, 0, 1);
+    class SubImm : public BaseOperation {
+    public:
+        constexpr SubImm() : BaseOperation(0b10100010, 0, 1) {}
+        void process(uint32_t bits, State &state) override;
+    };
+    
 
     void SubImm::process(uint32_t bits, State &state) {
         auto is_sf_set = is_bit_set(bits, 31);
