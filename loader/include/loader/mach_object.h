@@ -40,10 +40,14 @@ namespace cheeky::loader {
         /// Load commands;
         std::vector<lc_variant_t> _load_commands;  
         
+        int _fd;
+        char* _data;
+        size_t _data_len;
+
         ////////////////////////////////////////
 
         /// Constructor for internal usage 
-        MachObject(header_t header, std::vector<lc_variant_t> load_commands);
+        MachObject(header_t header, std::vector<lc_variant_t> load_commands, int fd, char* data, size_t len);
 
         template <typename LC_T>
         static LC_T load_lc_from_address_known_type(void* data) {
@@ -64,6 +68,8 @@ namespace cheeky::loader {
 
         
     public: 
+        ~MachObject();
+
         /// Loads Mach-O executable internals from a disk
         static MachObject load(std::string_view path);
         // Gets mmaped __TEXT instructions 

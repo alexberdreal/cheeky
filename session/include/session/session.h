@@ -4,6 +4,8 @@
 #include <ops/state.h>
 #include <array>
 
+#include <session/execution_unit.h>
+
 #include <loader/mach_object.h>
 
 
@@ -32,14 +34,18 @@
 namespace cheeky::session {
     class Session {
         private:
-            ops::State _state;
             char* _stack;
             void* _rodata;
             void* _data;
             void* _instructions;
+            std::shared_ptr<ops::State> _state = std::make_shared<ops::State>();
+            session::ExecutionUnit _exec;
         public: 
-            Session(std::string_view filepath) {
+            Session(std::string_view filepath) : _exec(_state) {
                 auto file = loader::MachObject::load(filepath);
+                auto instrs = file.load_instructions();
+                assert(instrs != nullptr);
+                _exec.execute(*instrs);
             }
     };
 }
