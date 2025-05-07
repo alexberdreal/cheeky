@@ -1,7 +1,7 @@
 #pragma once
 #include <sys/mman.h>
 #include <algorithm>
-#include <state.h>
+#include <ops/state.h>
 #include <array>
 
 #include <loader/mach_object.h>
@@ -29,14 +29,7 @@
     
 */
  
-const size_t MAX_INSTR_PREFETCH_SIZE = 4 * 1024;  // 4KB 
-
-void prefetch_instructions(void* addr, size_t size) {
-    madvise(addr, std::max(size, MAX_INSTR_PREFETCH_SIZE), MADV_WILLNEED | MADV_SEQUENTIAL);
-}
-
 namespace cheeky::session {
-
     class Session {
         private:
             ops::State _state;
@@ -44,5 +37,9 @@ namespace cheeky::session {
             void* _rodata;
             void* _data;
             void* _instructions;
+        public: 
+            Session(std::string_view filepath) {
+                auto file = loader::MachObject::load(filepath);
+            }
     };
 }

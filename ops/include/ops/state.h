@@ -1,5 +1,8 @@
 #pragma once
 #include <stdint.h>
+#include <bitset>
+
+// TODO: move into session 
 
 namespace cheeky::ops {
     // TODO: change to class

@@ -17,7 +17,7 @@ auto static get_fd_with_size(std::string_view path) -> std::pair<int, size_t> {
     return { fd, st.st_size };
 }
 
-namespace cheekydbg::loader {
+namespace cheeky::loader {
     MachObject::MachObject(mach_header_64 header, std::vector<lc_variant_t> load_commands) 
         : _header(std::move(header)), _load_commands(std::move(load_commands)) {}
 

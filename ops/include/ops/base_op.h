@@ -6,7 +6,7 @@
 #include <utils/util.h>
 
 namespace cheeky::ops {
-    enum class OpName {
+    enum class OpName : uint8_t {
         AddImm, SubImm, AddsImm, // TODO: SubsImm, Movz, Str, Ldr, Ret
     };
 
@@ -47,8 +47,8 @@ namespace cheeky::ops {
     class BaseOperation {
     private: 
         uint32_t _fixed_bits;          
-        uint32_t _base_fixed_bits; 
         uint32_t _mask;    
+        uint32_t _base_fixed_bits; 
     public: 
         /// raw_fixed - fixed bits, starting from 1
         /// iz (insignificant zeros) - number of zeros, at the start of fixed bits
@@ -61,7 +61,14 @@ namespace cheeky::ops {
         constexpr BaseOperation(uint32_t raw_fixed, uint32_t iz, uint32_t sb) :
             _fixed_bits(adjust_bits(raw_fixed, iz)), 
             _base_fixed_bits(get_base_fixed_bits(_fixed_bits)), 
-            _mask(get_mask_from_fixed(raw_fixed, iz, sb)) {}
+            _mask(get_mask_from_fixed(raw_fixed, iz, sb)) {
+                // base mask should start at least from a third higher bit
+                assert(sb <= 2);
+            }
+
+        uint32_t base_fixed_bits() {
+            return _base_fixed_bits;
+        }
 
         virtual bool is_match(uint32_t bits) {
             return (bits & _mask) == _fixed_bits;

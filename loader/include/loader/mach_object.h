@@ -7,7 +7,7 @@
 
 #include <mach-o/loader.h>
 
-namespace cheekydbg::loader {
+namespace cheeky::loader {
     class MachObject {
         // Load Commands:
         using header_t = mach_header_64;
@@ -66,6 +66,12 @@ namespace cheekydbg::loader {
     public: 
         /// Loads Mach-O executable internals from a disk
         static MachObject load(std::string_view path);
+        // Gets mmaped __TEXT instructions 
+        const uint32_t* load_instructions();
+        // Loads __TEXT rodata
+        std::vector<uint8_t> load_rodata();
+        // Loads __DATA segment
+        uint8_t* load_data();
     };
 }
 
