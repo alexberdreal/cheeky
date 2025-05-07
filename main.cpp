@@ -4,11 +4,14 @@
 #include <loader/mach_object.h>
 #include <iostream>
 #include <assert.h>
+#include <session/session.h>
 
 int main(int argc, char** argv) {
     assert(argc == 2);
 
     auto exec_path = argv[1];
+    
+    cheeky::session::Session sesh(argv[1]);
 
     return 0;
 }
