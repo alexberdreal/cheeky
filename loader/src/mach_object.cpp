@@ -80,17 +80,34 @@ namespace cheeky::loader {
         return found;
     }
 
+    std::optional<MachObject::lc_variant_t> MachObject::load_lc_from_address_unknown_type(char* data, int cmd) {
+        switch (cmd) {
+            case LC_SEGMENT_64: {
+                SegmentWithSections sws;
+                sws.segment = load_lc_from_address_known_type<lc_segment_t>(data);
+                sws.sections.resize(sws.segment.nsects);
+                assert((sws.segment.nsects * sizeof(lc_section_t) + sizeof(lc_segment_t)) == sws.segment.cmdsize);
+                memcpy(reinterpret_cast<void*>(sws.sections.data()), data + sizeof(lc_segment_t), sws.segment.nsects * sizeof(lc_section_t));
+                return { sws };
+            }
+            default:
+                return std::nullopt;
+        }
+    }
+
+    MachObject::~MachObject() {
+        // unmap binary's memory
+        munmap(reinterpret_cast<void*>(_data), _data_len);
+        // free  descriptor
+        close(_fd);
+    }
+
     std::vector<uint8_t> MachObject::load_rodata() {
         return {};
     }
 
     uint8_t* MachObject::load_data() {
         return nullptr;
-    }
-
-    MachObject::~MachObject() {
-        close(_fd);
-        munmap(reinterpret_cast<void*>(_data), _data_len);
     }
 }
 

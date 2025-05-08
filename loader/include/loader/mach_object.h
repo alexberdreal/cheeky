@@ -70,27 +70,22 @@ namespace cheeky::loader {
         /// Constructor for internal usage 
         MachObject(header_t header, std::vector<lc_variant_t> load_commands, int fd, char* data, size_t len);
 
+        /// @brief Loads load command from `data`, having its `cmd`.
+        /// @param data pointer to memory where the load command resides. 
+        /// @param cmd constant, can be found inside lc_base_t structure.
+        /// @return lc_variant_t if load command is supported, otherwise - nullopt.
+        static std::optional<lc_variant_t> load_lc_from_address_unknown_type(char* data, int cmd);
+
+        /// @brief Loads load command with given type.
+        /// @tparam LC_T one of lc_variant_t types.
+        /// @param data pointer to memory where the load command resides.
+        /// @return `LC_T` object.
         template <typename LC_T>
-        static LC_T load_lc_from_address_known_type(char* data) {
+        static inline LC_T load_lc_from_address_known_type(char* data) {
             constexpr size_t size = sizeof(LC_T);
             LC_T lc_out;
             memcpy(reinterpret_cast<void*>(&lc_out), reinterpret_cast<void*>(data), size);
             return lc_out;
-        }
-
-        static std::optional<lc_variant_t> load_lc_from_address_unknown_type(char* data, int cmd) {
-            switch (cmd) {
-                case LC_SEGMENT_64: {
-                    SegmentWithSections sws;
-                    sws.segment = load_lc_from_address_known_type<lc_segment_t>(data);
-                    sws.sections.resize(sws.segment.nsects);
-                    assert((sws.segment.nsects * sizeof(lc_section_t) + sizeof(lc_segment_t)) == sws.segment.cmdsize);
-                    memcpy(reinterpret_cast<void*>(sws.sections.data()), data + sizeof(lc_segment_t), sws.segment.nsects * sizeof(lc_section_t));
-                    return { sws };
-                }
-                default:
-                    return std::nullopt;
-            }
         }
     };
 }

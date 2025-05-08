@@ -67,7 +67,7 @@ namespace cheeky::ops {
                 assert(sb <= 2);
             }
 
-        uint32_t base_fixed_bits() {
+        constexpr uint32_t base_fixed_bits() {
             return _base_fixed_bits;
         }
 

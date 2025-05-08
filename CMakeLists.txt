@@ -26,4 +26,4 @@ endif()
 
 # Main cheeky executable
 add_executable(cheeky main.cpp)
-target_link_libraries(cheeky core loader session)
+target_link_libraries(cheeky session)

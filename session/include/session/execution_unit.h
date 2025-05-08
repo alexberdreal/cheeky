@@ -11,37 +11,11 @@ namespace cheeky::session {
         std::unordered_multimap<uint8_t, std::shared_ptr<ops::BaseOperation>> _ops;
         std::shared_ptr<State> _state;
 
-        std::shared_ptr<ops::BaseOperation> find_operation(uint32_t bytes) {
-            auto base_bits = ops::get_base_fixed_bits(bytes);
-            auto it = _ops.find(base_bits);
-            while (it != _ops.end() && !it->second->is_match(bytes)) {
-                it++;
-            }
-            return (it == _ops.end()) ? nullptr : it->second;
-        }
+        std::shared_ptr<ops::BaseOperation> find_operation(uint32_t bytes);
     public:
 
-        ExecutionUnit(std::shared_ptr<State> state) : _state(state) {
-            using namespace ops;
+        ExecutionUnit(std::shared_ptr<State> state);
 
-            _ops.emplace(AddImm{}.base_fixed_bits(), std::make_shared<AddImm>());
-            _ops.emplace(AddsImm{}.base_fixed_bits(), std::make_shared<AddsImm>());
-            _ops.emplace(SubImm{}.base_fixed_bits(), std::make_shared<SubImm>());
-
-            _state = std::make_shared<State>();
-        }
-
-        void execute(uint32_t bytes) {
-            auto op = find_operation(bytes);
-
-            if (op == nullptr) {
-                std::cerr << "Instruction is not supported: " << std::hex << bytes << std::endl;
-                std::terminate();
-            }
-
-            assert(_state != nullptr);
-
-            op->process(bytes, *_state);
-        }
+        void execute(uint32_t bytes);
     };
 }
