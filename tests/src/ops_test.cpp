@@ -20,11 +20,11 @@ TEST(OpsTest, AddImm_test) {
 
     int32_t bits = 0x11400900; // add x0, x8, #0x2 lsl 12
 
-    assert(add_imm.is_match(bits));
+    ASSERT_TRUE(add_imm.is_match(bits));
 
     add_imm.process(bits, state);
 
-    assert(state.get_r_ref(0) == 8192);
+    ASSERT_EQ(state.get_r_ref(0), 8192);
 }
 
 TEST(OpsTest, SubImm_test) {
@@ -35,11 +35,11 @@ TEST(OpsTest, SubImm_test) {
 
     int32_t bits = 0x5100C908; // sub x8, x8, #0x32
 
-    assert(sub_imm.is_match(bits));
+    ASSERT_TRUE(sub_imm.is_match(bits));
 
     sub_imm.process(bits, state);
 
-    assert(state.get_r_ref(8) == 450);
+    ASSERT_EQ(state.get_r_ref(8), 450);
 }
 
 int main(int argc, char** argv) {
