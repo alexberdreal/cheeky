@@ -13,16 +13,20 @@
 
 ## Building 
 
-Emulator binary + no tests (default): 
+Emulator binary + no tests (default):
+
 `mkdir build && cd build && cmake -S .. -B . && cmake --build .`
 
 Emulator binary + tests:
+
 `mkdir build && cd build && cmake -S .. -DBUILDTESTS=TRUE -B . && cmake --build .`
 
 # Running 
 
-emulator: 
+emulator:
+
 `./build/cheeky <filepath>`
 
-ops tests: 
+ops tests:
+
 `./build/tests/ops_test`
