@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
-#include <core/state.h>
 #include <assert.h>
 
+#include <core/state.h>
 #include <core/util.h>
 
 namespace cheeky::ops {
