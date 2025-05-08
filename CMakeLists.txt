@@ -4,11 +4,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(cheeky)
 
-add_subdirectory(utils)
+add_subdirectory(core)
 add_subdirectory(loader)
 add_subdirectory(ops)
 add_subdirectory(session)
 
 add_executable(cheeky main.cpp)
 
-target_link_libraries(cheeky utils loader session)
+target_link_libraries(cheeky core loader session)

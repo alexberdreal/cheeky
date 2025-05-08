@@ -11,11 +11,9 @@
     ADD <Xd|SP>, <Xn|SP>, #<imm>{, <shift>}
 */
 
-// TODO: add support of S instructions (simply update NZCV flags if bit 29 is set)
-// TODO: try partial specialization for S flag 
-
 namespace cheeky::ops {
     class AddImm : public BaseOperation {
+        using State = core::State;
     public:
         constexpr AddImm() : BaseOperation(0b100010, 2, 1) {}
         void process(uint32_t bits, State &state) override;
@@ -40,15 +38,15 @@ namespace cheeky::ops {
         if (is_sf_set) {
             // 64 bit case
 
-            auto& rd = state.r[rd_idx];
-            const auto& rn = state.r[rn_idx];
+            auto rd = state.get_r_ptr(rd_idx);
+            auto rn = state.get_r_ptr(rn_idx);
 
-            add(rd, rn);
+            add(*rd, *rn);
         } else {
             // 32 bit case
 
-            auto rd = reinterpret_cast<uint32_t*>(&state.r[rd_idx]);
-            auto rn = reinterpret_cast<const uint32_t*>(&state.r[rn_idx]);
+            auto rd = reinterpret_cast<uint32_t*>(state.get_r_ptr(rd_idx));
+            auto rn = reinterpret_cast<const uint32_t*>(state.get_r_ptr(rn_idx));
 
             add(*rd, *rn);
         }

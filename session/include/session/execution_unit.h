@@ -4,11 +4,12 @@
 
 namespace cheeky::session {
     class ExecutionUnit {
+        using State = core::State;
     private:
         // 0 < opcode < 63
         // TODO: change to array of priority list (the most used instructions should be first)
         std::unordered_multimap<uint8_t, std::shared_ptr<ops::BaseOperation>> _ops;
-        std::shared_ptr<ops::State> _state;
+        std::shared_ptr<State> _state;
 
         std::shared_ptr<ops::BaseOperation> find_operation(uint32_t bytes) {
             auto base_bits = ops::get_base_fixed_bits(bytes);
@@ -20,14 +21,14 @@ namespace cheeky::session {
         }
     public:
 
-        ExecutionUnit(std::shared_ptr<ops::State> state) : _state(state) {
+        ExecutionUnit(std::shared_ptr<State> state) : _state(state) {
             using namespace ops;
 
             _ops.emplace(AddImm{}.base_fixed_bits(), std::make_shared<AddImm>());
             _ops.emplace(AddsImm{}.base_fixed_bits(), std::make_shared<AddsImm>());
             _ops.emplace(SubImm{}.base_fixed_bits(), std::make_shared<SubImm>());
 
-            _state = std::make_shared<ops::State>();
+            _state = std::make_shared<State>();
         }
 
         void execute(uint32_t bytes) {

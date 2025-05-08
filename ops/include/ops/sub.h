@@ -15,6 +15,7 @@
 
 namespace cheeky::ops {
     class SubImm : public BaseOperation {
+        using State = core::State;
     public:
         constexpr SubImm() : BaseOperation(0b10100010, 0, 1) {}
         void process(uint32_t bits, State &state) override;
@@ -40,15 +41,15 @@ namespace cheeky::ops {
         if (is_sf_set) {
             // 64 bit case
 
-            auto& rd = state.r[rd_idx];
-            const auto& rn = state.r[rn_idx];
+            auto rd = state.get_r_ptr(rd_idx);
+            auto rn = state.get_r_ptr(rn_idx);
 
-            sub(rd, rn);
+            sub(*rd, *rn);
         } else {
             // 32 bit case
 
-            auto rd = reinterpret_cast<uint32_t*>(&state.r[rd_idx]);
-            auto rn = reinterpret_cast<const uint32_t*>(&state.r[rn_idx]);
+            auto rd = reinterpret_cast<uint32_t*>(state.get_r_ptr(rd_idx));
+            auto rn = reinterpret_cast<const uint32_t*>(state.get_r_ptr(rn_idx));
 
             sub(*rd, *rn);
         }

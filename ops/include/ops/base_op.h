@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
-#include <ops/state.h>
+#include <core/state.h>
 #include <assert.h>
 
-#include <utils/util.h>
+#include <core/util.h>
 
 namespace cheeky::ops {
     enum class OpName : uint8_t {
@@ -12,7 +12,7 @@ namespace cheeky::ops {
 
     // 0b010001 (X lower bits) -> 0b01000100000000000000000000000000 (32 bits with shifted to higher)
     constexpr uint32_t adjust_bits(uint32_t bits, uint32_t zeros) {
-        auto bits_len = utils::log2(bits) + 1;
+        auto bits_len = core::log2(bits) + 1;
         return bits << (31u - bits_len - zeros);
     }
 
@@ -28,7 +28,7 @@ namespace cheeky::ops {
     // res >> 31 - skipped - len = 0b00[11111111111]
     // res << 31 - skipped - len
     constexpr uint32_t get_mask_from_fixed(uint32_t raw_fixed, uint32_t zeros, uint32_t skipped_bits) {
-        auto mask_len = utils::log2(raw_fixed) + 1 + zeros;
+        auto mask_len = core::log2(raw_fixed) + 1 + zeros;
         return ((1 << mask_len) - 1) << (32 - skipped_bits - mask_len);
     }
 
@@ -45,6 +45,7 @@ namespace cheeky::ops {
     // sz - skipped zeros
     // iz - insignigicant zeros
     class BaseOperation {
+        using State = core::State;
     private: 
         uint32_t _fixed_bits;          
         uint32_t _mask;    

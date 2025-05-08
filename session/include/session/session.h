@@ -1,7 +1,7 @@
 #pragma once
 #include <sys/mman.h>
 #include <algorithm>
-#include <ops/state.h>
+#include <core/state.h>
 #include <array>
 
 #include <session/execution_unit.h>
@@ -33,19 +33,20 @@
  
 namespace cheeky::session {
     class Session {
-        private:
-            char* _stack;
-            void* _rodata;
-            void* _data;
-            void* _instructions;
-            std::shared_ptr<ops::State> _state = std::make_shared<ops::State>();
-            session::ExecutionUnit _exec;
-        public: 
-            Session(std::string_view filepath) : _exec(_state) {
-                auto file = loader::MachObject::load(filepath);
-                auto instrs = file.load_instructions();
-                assert(instrs != nullptr);
-                _exec.execute(*instrs);
-            }
+        using State = core::State;
+    private:
+        char* _stack;
+        void* _rodata;
+        void* _data;
+        void* _instructions;
+        std::shared_ptr<State> _state = std::make_shared<State>();
+        session::ExecutionUnit _exec;
+    public: 
+        Session(std::string_view filepath) : _exec(_state) {
+            auto file = loader::MachObject::load(filepath);
+            auto instrs = file.load_instructions();
+            assert(instrs != nullptr);
+            _exec.execute(*instrs);
+        }
     };
 }
