@@ -7,7 +7,7 @@
 
 namespace cheeky::ops {
     enum class OpName : uint8_t {
-        AddImm, SubImm, AddsImm, // TODO: SubsImm, Movz, Str, Ldr, Ret
+        AddImm, SubImm, AddsImm, SubsImm // TODO: Movz, Str, Ldr, Ret
     };
 
     // 0b010001 (X lower bits) -> 0b01000100000000000000000000000000 (32 bits with shifted to higher)

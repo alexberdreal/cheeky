@@ -4,3 +4,4 @@
 #include <ops/add.h>
 #include <ops/adds.h>
 #include <ops/sub.h>
+#include <ops/subs.h>
