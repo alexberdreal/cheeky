@@ -46,7 +46,10 @@ namespace cheeky::session {
             auto file = loader::MachObject::load(filepath);
             auto instrs = file.load_instructions();
             assert(instrs != nullptr);
-            _exec.execute(*instrs);
+            while (_state->is_active()) {
+                _exec.execute(instrs[_state->get_pc()]);
+                _state->advance_pc();
+            }
         }
     };
 }

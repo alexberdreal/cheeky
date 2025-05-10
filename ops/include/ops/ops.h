@@ -5,3 +5,4 @@
 #include <ops/adds.h>
 #include <ops/sub.h>
 #include <ops/subs.h>
+#include <ops/orr.h>

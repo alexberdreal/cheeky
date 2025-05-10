@@ -1,6 +1,8 @@
 #include <assert.h>
 
 #include <core/state.h>
+#include <iostream>
+
 
 namespace cheeky::core {
     // NZCV flags
@@ -40,7 +42,7 @@ namespace cheeky::core {
     // PC register
 
     void State::advance_pc() {
-        _pc += 4;
+        _pc++;
     }
 
     uint64_t State::get_pc() const {
@@ -57,5 +59,11 @@ namespace cheeky::core {
     uint64_t& State::get_r_ref(size_t idx) {
         assert(0 <= idx && idx <= 31);
         return *get_r_ptr(idx);
+    }
+
+    // Is active state
+
+    bool State::is_active() const {
+        return _is_active;
     }
 }

@@ -21,7 +21,7 @@ namespace cheeky::ops {
                 state.set_c_flag(UINT32_MAX - imm < rn);
 
                 // if the highest bit is 1 (negative sign)
-                state.set_n_flag(res & (1 << 31));
+                state.set_n_flag(res & (1u << 31));
 
                 // Having y = x + C, if x and C share the same sign, but result has different sign, there is an overflow 
                 // [1]0000..0 (- min) + [1]1111..1 (-1) = [0]111111..1 (+ max) -> overflow
@@ -30,9 +30,9 @@ namespace cheeky::ops {
                 // [1]1111..1 (-1) + [0]0000..1 (+1) = [0]0000..0 (+0) -> there is no overflow
                 
                 // check if Rn and Imm share the same sign
-                auto is_same_sign = (rn & (1 << 31)) == (imm & (1 << 31));
+                auto is_same_sign = (rn & (1u << 31)) == (imm & (1u << 31));
                 // check if sign's been changed
-                auto v_flag = is_same_sign && ((res & (1 << 31)) != (rn & (1 << 31)));
+                auto v_flag = is_same_sign && ((res & (1u << 31)) != (rn & (1u << 31)));
 
                 state.set_v_flag(v_flag);
             } else {
@@ -40,7 +40,7 @@ namespace cheeky::ops {
                 state.set_c_flag(UINT64_MAX - imm < rn);
 
                 // if the highest bit is 1 (negative sign)
-                state.set_n_flag(res & (1 << 63));
+                state.set_n_flag(res & (uint64_t(1) << 63));
                 
                 // Having y = x + C, if x and C share the same sign, but result has different sign, there is an overflow 
                 // [1]0000..0 (- min) + [1]1111..1 (-1) = [0]111111..1 (+ max) -> overflow
@@ -49,9 +49,9 @@ namespace cheeky::ops {
                 // [1]1111..1 (-1) + [0]0000..1 (+1) = [0]0000..0 (+0) -> there is no overflow
                                 
                 // check if Rn and Imm share the same sign
-                auto is_same_sign = (rn & (1 << 63)) == (imm & (1 << 63));
+                auto is_same_sign = (rn & (uint64_t(1) << 63)) == (imm & (uint64_t(1) << 63));
                 // check if sign's been changed
-                auto v_flag = is_same_sign && ((res & (1 << 63)) != (rn & (1 << 63)));
+                auto v_flag = (is_same_sign && (res & (uint64_t(1) << 63))) != (rn & (uint64_t(1) << 63));
                 
                 state.set_v_flag(v_flag);
             }

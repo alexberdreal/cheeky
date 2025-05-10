@@ -16,7 +16,7 @@ namespace cheeky::ops {
 
             if (std::is_same_v<decltype(rn), uint32_t>) {
                 // if the highest bit is 1 (negative sign)
-                state.set_n_flag(res & (1 << 31));
+                state.set_n_flag(res & (1u << 31));
 
                 // Having y = x - C, if x and C have different signs, but result has a sign different than x's one, there is an overflow 
                 // [1]0000..0 (- min) - [0]0000..1 (+1) = [0]111111..1 (+ max) -> overflow
@@ -25,9 +25,9 @@ namespace cheeky::ops {
                 // [1]1111..1 (-1) + [0]0000..1 (+1) = [0]0000..0 (+0) -> there is no overflow
                 
                 // check if Rn and Imm share the same sign
-                auto is_same_sign = (rn & (1 << 31)) == (imm & (1 << 31));
+                auto is_same_sign = (rn & (1u << 31)) == (imm & (1u << 31));
                 // check if sign's been changed
-                auto v_flag = !is_same_sign && ((res & (1 << 31)) != (rn & (1 << 31)));
+                auto v_flag = !is_same_sign && ((res & (1u << 31)) != (rn & (1u << 31)));
 
                 state.set_v_flag(v_flag);
             } else {
@@ -49,7 +49,6 @@ namespace cheeky::ops {
             }
 
             state.set_z_flag(rn + imm == 0);
-            std::cout << std::hex << "imm " << imm << " rn " << rn << std::endl;
             // subs sets the Carry flag in case of no underflow (no borrowing)
             // rn - imm >= min -> rn >= min + imm -> rn >= 0 + imm
             state.set_c_flag(imm <= rn);

@@ -8,9 +8,11 @@ namespace cheeky::core {
         /// General-purpose registers + fp (x29) + lr (x30) + sp / zr (x31)
         uint64_t _r[32];
         /// Program Counter
-        uint64_t _pc;
+        uint64_t _pc = 0;
         /// Flags (negative (bit 0), zero (bit 1), carry (bit 2), overflow (bit 3))
         std::bitset<4> _nzcv; 
+        /// Is it the end of 
+        bool _is_active = true;
     
     public:
         // NZCV flags 
@@ -36,5 +38,8 @@ namespace cheeky::core {
         
         uint64_t* get_r_ptr(size_t idx);
         uint64_t& get_r_ref(size_t idx); 
+
+        // Is need to run next instructions
+        bool is_active() const;
     };
 }

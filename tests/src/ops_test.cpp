@@ -69,6 +69,29 @@ TEST(OpsTest, SubsImm_test) {
     ASSERT_EQ(state.get_v_flag(), 0);
 }
 
+TEST(OpsTest, OrrSh_test) {
+    OrrSh orr_sh;
+    State state;
+
+    // Initialize source register x0 with test value
+    state.get_r_ref(0) = 0x1234;
+    // Initialize destination register x8 with different value
+    state.get_r_ref(8) = 0xFFFF;
+
+    // Instruction bits for: orr x8, x0, #0 (mov x8, x0)
+    int32_t bits = 0xAA0003E8;
+
+    // Verify instruction matching
+    ASSERT_TRUE(orr_sh.is_match(bits));
+
+    // Process the instruction
+    orr_sh.process(bits, state);
+
+    // Verify register transfer
+    ASSERT_EQ(state.get_r_ref(8), 0x1234);  // x8 should now equal x0's original value
+    ASSERT_EQ(state.get_r_ref(0), 0x1234);  // x0 should remain unchanged
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

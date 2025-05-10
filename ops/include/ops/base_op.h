@@ -1,13 +1,20 @@
 #pragma once
 #include <iostream>
 #include <assert.h>
+#include <utility>
 
 #include <core/state.h>
 #include <core/util.h>
 
 namespace cheeky::ops {
+    // TODO: move to ops utils
+
     enum class OpName : uint8_t {
-        AddImm, SubImm, AddsImm, SubsImm // TODO: Movz, Str, Ldr, Ret
+        AddImm, SubImm, AddsImm, SubsImm, OrrSh // TODO: Str, Ldr, Ret
+    };
+
+    enum class ShiftRule : uint8_t {
+        LSL = 0, LSR = 0b01, ASR = 0b10, ROR = 0b11, // TODO check if invalid
     };
 
     // 0b010001 (X lower bits) -> 0b01000100000000000000000000000000 (32 bits with shifted to higher)
@@ -41,6 +48,107 @@ namespace cheeky::ops {
         auto len = end_bit - start_bit + 1;
         return ((1 << len) - 1) << start_bit;
     }
+
+    // TODO: tests + validate rule
+    constexpr uint64_t shift_by_rule_64(ShiftRule rule, uint64_t data, uint8_t amt) {
+        assert((0 <= amt) &&  (amt <= 31));
+
+        if (amt == 0) {
+            return data;
+        }
+
+        switch (rule)
+        {
+        case ShiftRule::LSL:
+            return data << amt;
+        case ShiftRule::LSR:
+            return data >> amt;
+        case ShiftRule::ASR: {
+            auto is_neg = data & (uint64_t(1) << 63);
+            if (is_neg) {
+                // 1. Reset the sign bit
+                data &= ((uint64_t(1) << 63) - 1);
+                // 2. Do a LSR by <amt>
+                data >>= amt;
+                // 3. Get sequential 11..1 bits with sign bit + shifted bits.
+                data |= (((1 << (amt + 1)) - 1) << (63 - amt));
+
+                return data;
+            } else {
+                // For positive - behave like a regular LSR
+                return data >>= amt;
+            }
+        }
+        case ShiftRule::ROR: {
+            // Rotate right, 0b001100[10] >> 2 => 0b[10]1100
+
+            // 1. Get last <amt> bits, shift them left by 64 - <amt> bits
+            auto mirrored = (((1 << amt) - 1) & data) << (64 - amt); 
+            // 2. Do a regular LSR 
+            data >>= amt;
+            // 3. Do OR with the value from step 1
+            data |= mirrored;
+
+            return data;
+        }
+        default: {
+            // TODO
+            std::cerr << "Shft rule default" << std::endl;
+            std::terminate();
+        }
+        }
+    } 
+
+       // TODO: tests + validate rule
+       constexpr uint64_t shift_by_rule_32(ShiftRule rule, uint32_t data, uint8_t amt) {
+        assert((0 <= amt) &&  (amt <= 31));
+
+        if (amt == 0) {
+            return data;
+        }
+
+        switch (rule)
+        {
+        case ShiftRule::LSL:
+            return data << amt;
+        case ShiftRule::LSR:
+            return data >>= amt;
+        case ShiftRule::ASR: {
+            auto is_neg = data & (1u << 31);
+            if (is_neg) {
+                // 1. Reset the sign bit
+                data &= ((1u << 31) - 1);
+                // 2. Do a LSR by <amt>
+                data >>= amt;
+                // 3. Get sequential 11..1 bits with sign bit + shifted bits.
+                data |= (((1 << (amt + 1)) - 1) << (31 - amt));
+
+                return data;
+            } else {
+                // For positive - behave like a regular LSR
+                return data >>= amt;
+            }
+        }
+        case ShiftRule::ROR: {
+            // Rotate right, 0b001100[10] >> 2 => 0b[10]1100
+
+            // 1. Get last <amt> bits, shift them left by 64 - <amt> bits
+            auto mirrored = (((1 << amt) - 1) & data) << (32 - amt); 
+            // 2. Do a regular LSR 
+            data >>= amt;
+            // 3. Do OR with the value from step 1
+            data |= mirrored;
+
+            return data;
+        }
+        default: {
+            // TODO
+            std::cerr << "Shft rule default" << std::endl;
+            std::terminate();
+            break;
+        }
+        }
+    } 
 
     // sz - skipped zeros
     // iz - insignigicant zeros
