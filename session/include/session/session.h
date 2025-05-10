@@ -35,7 +35,6 @@ namespace cheeky::session {
     class Session {
         using State = core::State;
     private:
-        char* _stack;
         void* _rodata;
         void* _data;
         void* _instructions;
@@ -43,6 +42,8 @@ namespace cheeky::session {
         session::ExecutionUnit _exec;
     public: 
         Session(std::string_view filepath) : _exec(_state) {
+            // TODO: proper stack initialization
+            _state->get_r_ref_64(31) = 512 * 1024 - 1; 
             auto file = loader::MachObject::load(filepath);
             auto instrs = file.load_instructions();
             assert(instrs != nullptr);

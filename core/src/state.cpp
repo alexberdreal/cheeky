@@ -49,14 +49,24 @@ namespace cheeky::core {
 
     // General-purpose registers
 
-    uint64_t* State::get_r_ptr(size_t idx) {
+    uint32_t& State::get_r_ref_32(size_t idx) {
         assert(0 <= idx && idx <= 31);
-        return &_r[idx];
+        return *reinterpret_cast<uint32_t*>(&_r[idx]);
     }
 
-    uint64_t& State::get_r_ref(size_t idx) {
+    uint64_t& State::get_r_ref_64(size_t idx) {
         assert(0 <= idx && idx <= 31);
-        return *get_r_ptr(idx);
+        return _r[idx];
+    }
+
+    // Virtual memory accessors 
+
+    uint32_t& State::get_vm_with_offset_32(uint32_t offset) {
+        return *reinterpret_cast<uint32_t*>(&_stack[offset]);
+    }
+
+    uint64_t& State::get_vm_with_offset_64(uint64_t offset) {
+        return *reinterpret_cast<uint64_t*>(&_stack[offset]);
     }
 
     // Is active state

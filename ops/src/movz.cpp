@@ -13,15 +13,15 @@ namespace cheeky::ops {
         if (is_sf_set) {
             // 64 bit case
 
-            auto& rd = state.get_r_ref(rd_idx);
+            auto& rd = state.get_r_ref_64(rd_idx);
 
             rd = (imm16 << shft);
         } else {
             // 32 bit case
 
-            auto rd = reinterpret_cast<uint32_t*>(state.get_r_ptr(rd_idx));
+            auto& rd = state.get_r_ref_32(rd_idx);
 
-            *rd = (imm16 << shft);
+            rd = (imm16 << shft);
         }
     }
 }

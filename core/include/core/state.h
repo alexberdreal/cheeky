@@ -13,6 +13,9 @@ namespace cheeky::core {
         std::bitset<4> _nzcv; 
         /// Is it the end of 
         bool _is_active = true;
+
+        // TODO: malloc, now just 512 * 1024 bytes (512 KB)
+        std::uint8_t _stack[512 * 1024];
     
     public:
         // NZCV flags 
@@ -36,8 +39,13 @@ namespace cheeky::core {
 
         // General-purpose registers operations
         
-        uint64_t* get_r_ptr(size_t idx);
-        uint64_t& get_r_ref(size_t idx); 
+        uint32_t& get_r_ref_32(size_t idx);
+        uint64_t& get_r_ref_64(size_t idx); 
+
+        // Virtual memory accessors
+        // Only stack is supported at the moment
+        uint32_t& get_vm_with_offset_32(uint32_t offset);
+        uint64_t& get_vm_with_offset_64(uint64_t offset);
 
         // Is need to run next instructions
         bool is_active() const;

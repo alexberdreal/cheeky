@@ -2,6 +2,7 @@
 
 namespace cheeky::ops {
     void SubsImm::process(uint32_t bits, State &state) {
+
         auto is_sf_set = is_bit_set(bits, 31);
         auto is_sh_set = is_bit_set(bits, 22);
         
@@ -66,17 +67,17 @@ namespace cheeky::ops {
         if (is_sf_set) {
             // 64 bit case
 
-            auto rd = state.get_r_ptr(rd_idx);
-            auto rn = state.get_r_ptr(rn_idx);
+            auto& rd = state.get_r_ref_64(rd_idx);
+            auto rn = state.get_r_ref_64(rn_idx);
 
-            sub(*rd, *rn);
+            sub(rd, rn);
         } else {
             // 32 bit case
 
-            auto rd = reinterpret_cast<uint32_t*>(state.get_r_ptr(rd_idx));
-            auto rn = reinterpret_cast<const uint32_t*>(state.get_r_ptr(rn_idx));
+            auto& rd = state.get_r_ref_32(rd_idx);
+            auto rn = state.get_r_ref_32(rn_idx);
 
-            sub(*rd, *rn);
+            sub(rd, rn);
         }
     }
 }

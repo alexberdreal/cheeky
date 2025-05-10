@@ -71,17 +71,17 @@ namespace cheeky::ops {
         if (is_sf_set) {
             // 64 bit case
 
-            auto rd = state.get_r_ptr(rd_idx);
-            const auto rn = state.get_r_ptr(rn_idx);
+            auto& rd = state.get_r_ref_64(rd_idx);
+            auto rn = state.get_r_ref_64(rn_idx);
 
-            add(*rd, *rn);
+            add(rd, rn);
         } else {
             // 32 bit case
 
-            auto rd = reinterpret_cast<uint32_t*>(state.get_r_ptr(rd_idx));
-            auto rn = reinterpret_cast<const uint32_t*>(state.get_r_ptr(rn_idx));
+            auto& rd = state.get_r_ref_32(rd_idx);
+            auto rn = state.get_r_ref_32(rn_idx);
 
-            add(*rd, *rn);
+            add(rd, rn);
         }
     }
 }

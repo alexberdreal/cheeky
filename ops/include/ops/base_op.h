@@ -23,7 +23,7 @@ namespace cheeky::ops {
         return bits << (31u - bits_len - zeros);
     }
 
-    // 0b01[000110]0010110.. -> 0b000110 (6 bits)
+    // 0b01[00011]00010110.. -> 0b00011 (5 bits)
     constexpr uint32_t get_base_fixed_bits(uint32_t fixed) {
         return (fixed & 0x3F000000) >> 29;
     }

@@ -12,8 +12,8 @@ TEST(OpsTest, AddImm_test) {
     AddImm add_imm;
     State state;
 
-    state.get_r_ref(0) = 0;
-    state.get_r_ref(8) = 0;
+    state.get_r_ref_64(0) = 0;
+    state.get_r_ref_64(8) = 0;
 
     int32_t bits = 0x11400900; // add x0, x8, #0x2 lsl 12
 
@@ -21,14 +21,14 @@ TEST(OpsTest, AddImm_test) {
 
     add_imm.process(bits, state);
 
-    ASSERT_EQ(state.get_r_ref(0), 8192);
+    ASSERT_EQ(state.get_r_ref_64(0), 8192);
 }
 
 TEST(OpsTest, SubImm_test) {
     SubImm sub_imm;
     State state;
 
-    state.get_r_ref(8) = 500;
+    state.get_r_ref_64(8) = 500;
 
     int32_t bits = 0x5100C908; // sub x8, x8, #0x32
 
@@ -36,7 +36,7 @@ TEST(OpsTest, SubImm_test) {
 
     sub_imm.process(bits, state);
 
-    ASSERT_EQ(state.get_r_ref(8), 450);
+    ASSERT_EQ(state.get_r_ref_64(8), 450);
 }
 
 TEST(OpsTest, SubsImm_test) {
@@ -44,7 +44,7 @@ TEST(OpsTest, SubsImm_test) {
     State state;
 
     // Initialize register x8 to 500
-    state.get_r_ref(8) = 500;
+    state.get_r_ref_64(8) = 500;
 
     // Instruction bits for: subs x8, x8, #0x32 (subtract immediate with flags)
     int32_t bits = 0x7100C908;
@@ -56,7 +56,7 @@ TEST(OpsTest, SubsImm_test) {
     subs_imm.process(bits, state);
 
     // After subtraction: 500 - 50 = 450
-    ASSERT_EQ(state.get_r_ref(8), 450);
+    ASSERT_EQ(state.get_r_ref_64(8), 450);
 
     // N flag: 0 (result positive)
     ASSERT_EQ(state.get_n_flag(), 0);
@@ -73,9 +73,9 @@ TEST(OpsTest, OrrSh_test) {
     State state;
 
     // Initialize source register x0 with test value
-    state.get_r_ref(0) = 0x1234;
+    state.get_r_ref_64(0) = 0x1234;
     // Initialize destination register x8 with different value
-    state.get_r_ref(8) = 0xFFFF;
+    state.get_r_ref_64(8) = 0xFFFF;
 
     // Instruction bits for: orr x8, x0, #0 (mov x8, x0)
     int32_t bits = 0xAA0003E8;
@@ -87,8 +87,8 @@ TEST(OpsTest, OrrSh_test) {
     orr_sh.process(bits, state);
 
     // Verify register transfer
-    ASSERT_EQ(state.get_r_ref(8), 0x1234);  // x8 should now equal x0's original value
-    ASSERT_EQ(state.get_r_ref(0), 0x1234);  // x0 should remain unchanged
+    ASSERT_EQ(state.get_r_ref_64(8), 0x1234);  // x8 should now equal x0's original value
+    ASSERT_EQ(state.get_r_ref_64(0), 0x1234);  // x0 should remain unchanged
 }
 
 TEST(OpsTest, OrrSh_LSL) {
@@ -96,13 +96,13 @@ TEST(OpsTest, OrrSh_LSL) {
     State state;
 
     // ORR x9, x2, x3, LSL #4
-    state.get_r_ref(2) = 0b00001;
-    state.get_r_ref(3) = 0b00001;
+    state.get_r_ref_64(2) = 0b00001;
+    state.get_r_ref_64(3) = 0b00001;
     orr_sh.process(0xAA031049, state); // Encoding for shift=4, LSL
     
     // Expected: 0x0000FFFF0000FFFF | (0x1234567812345678 << 4)
-    ASSERT_EQ(state.get_r_ref(9), 0b10001);
-    ASSERT_EQ(state.get_r_ref(2), 0b00001); // Verify source unchanged
+    ASSERT_EQ(state.get_r_ref_64(9), 0b10001);
+    ASSERT_EQ(state.get_r_ref_64(2), 0b00001); // Verify source unchanged
 }
 
 TEST(OpsTest, OrrSh_LSR) {
@@ -110,13 +110,13 @@ TEST(OpsTest, OrrSh_LSR) {
     State state;
 
     // ORR x9, x2, x3, LSL #3
-    state.get_r_ref(2) = 0b10000;
-    state.get_r_ref(3) = 0b11000;
+    state.get_r_ref_64(2) = 0b10000;
+    state.get_r_ref_64(3) = 0b11000;
     orr_sh.process(0xAA430C49, state); // Encoding for shift=4, LSL
     
     // Expected: 0x0000FFFF0000FFFF | (0x1234567812345678 << 4)
-    ASSERT_EQ(state.get_r_ref(9), 0b10011);
-    ASSERT_EQ(state.get_r_ref(2), 0b10000); // Verify source unchanged
+    ASSERT_EQ(state.get_r_ref_64(9), 0b10011);
+    ASSERT_EQ(state.get_r_ref_64(2), 0b10000); // Verify source unchanged
 }
 
 TEST(OpsTest, OrrSh_ASR) {
@@ -124,13 +124,13 @@ TEST(OpsTest, OrrSh_ASR) {
     State state;
 
     // ORR x9, x2, x3, ASR #2
-    state.get_r_ref(2) = 0b00000;
-    state.get_r_ref(3) = 0b10000 | (uint64_t(1) << 63);
+    state.get_r_ref_64(2) = 0b00000;
+    state.get_r_ref_64(3) = 0b10000 | (uint64_t(1) << 63);
     orr_sh.process(0xAA830849, state); // Encoding for shift=4, LSL
     
     // Expected: 0x0000FFFF0000FFFF | (0x1234567812345678 << 4)
-    ASSERT_EQ(state.get_r_ref(9), (uint64_t(0b111) << 61) | 0b00100);
-    ASSERT_EQ(state.get_r_ref(2), 0b00000); // Verify source unchanged
+    ASSERT_EQ(state.get_r_ref_64(9), (uint64_t(0b111) << 61) | 0b00100);
+    ASSERT_EQ(state.get_r_ref_64(2), 0b00000); // Verify source unchanged
 }
 
 TEST(OpsTest, Movz_test) {
@@ -138,10 +138,29 @@ TEST(OpsTest, Movz_test) {
     State state;
 
     // mov	w0, #0x0
-    state.get_r_ref(0) = 0xFFFF;
+    state.get_r_ref_64(0) = 0xFFFF;
     orr_sh.process(0x52800000, state); // Encoding for shift=4, LSL
 
-    ASSERT_EQ(state.get_r_ref(0), 0);
+    ASSERT_EQ(state.get_r_ref_64(0), 0);
+}
+
+TEST(OpsTest, StrImm_test) {
+    StrImm str_imm;
+    State state;
+
+    // str	w8, [sp, #0x8]
+
+    ASSERT_TRUE(str_imm.is_match(0xb9000be8));
+
+    // mov	w0, #0x0
+    state.get_r_ref_32(8) = 0xFFFF;
+    state.get_r_ref_32(31) = 0;
+    auto& wsp = state.get_r_ref_32(31);
+    auto& vm = state.get_vm_with_offset_32(wsp + 0x8);
+    vm = 0;
+    str_imm.process(0xb9000be8, state); 
+
+    ASSERT_EQ(vm, 0xFFFF);
 }
 
 int main(int argc, char** argv) {

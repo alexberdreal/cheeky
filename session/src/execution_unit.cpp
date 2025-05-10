@@ -10,8 +10,9 @@ namespace cheeky::session {
         _ops.emplace(SubsImm{}.base_fixed_bits(), std::make_shared<SubImm>());
         _ops.emplace(OrrSh{}.base_fixed_bits(), std::make_shared<OrrSh>());
         _ops.emplace(Movz{}.base_fixed_bits(), std::make_shared<Movz>());
+        _ops.emplace(StrImm{}.base_fixed_bits(), std::make_shared<StrImm>());
 
-        _state = std::make_shared<State>();
+        _state = std::move(state);
     }
 
 
