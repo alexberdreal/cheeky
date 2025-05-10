@@ -133,6 +133,17 @@ TEST(OpsTest, OrrSh_ASR) {
     ASSERT_EQ(state.get_r_ref(2), 0b00000); // Verify source unchanged
 }
 
+TEST(OpsTest, Movz_test) {
+    Movz orr_sh;
+    State state;
+
+    // mov	w0, #0x0
+    state.get_r_ref(0) = 0xFFFF;
+    orr_sh.process(0x52800000, state); // Encoding for shift=4, LSL
+
+    ASSERT_EQ(state.get_r_ref(0), 0);
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

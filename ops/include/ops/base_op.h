@@ -10,7 +10,7 @@ namespace cheeky::ops {
     // TODO: move to ops utils
 
     enum class OpName : uint8_t {
-        AddImm, SubImm, AddsImm, SubsImm, OrrSh // TODO: Str, Ldr, Ret
+        AddImm, SubImm, AddsImm, SubsImm, OrrSh, Movz // TODO: Str, Ldr, Ret
     };
 
     enum class ShiftRule : uint8_t {

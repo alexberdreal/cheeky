@@ -6,3 +6,4 @@
 #include <ops/sub.h>
 #include <ops/subs.h>
 #include <ops/orr.h>
+#include <ops/movz.h>
