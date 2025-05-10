@@ -79,7 +79,7 @@ namespace cheeky::loader {
         /// @brief Loads load command with given type.
         /// @tparam LC_T one of lc_variant_t types.
         /// @param data pointer to memory where the load command resides.
-        /// @return `LC_T` object.
+        /// @return `LC_T` object
         template <typename LC_T>
         static inline LC_T load_lc_from_address_known_type(char* data) {
             constexpr size_t size = sizeof(LC_T);

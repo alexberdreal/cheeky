@@ -50,8 +50,8 @@ namespace cheeky::ops {
     }
 
     // TODO: tests + validate rule
-    constexpr uint64_t shift_by_rule_64(ShiftRule rule, uint64_t data, uint8_t amt) {
-        assert((0 <= amt) &&  (amt <= 31));
+    inline uint64_t shift_by_rule_64(ShiftRule rule, uint64_t data, uint16_t amt) {
+        assert((0 <= amt) &&  (amt <= 63));
 
         if (amt == 0) {
             return data;
@@ -60,7 +60,7 @@ namespace cheeky::ops {
         switch (rule)
         {
         case ShiftRule::LSL:
-            return data << amt;
+            return data << amt;                
         case ShiftRule::LSR:
             return data >> amt;
         case ShiftRule::ASR: {
@@ -71,7 +71,7 @@ namespace cheeky::ops {
                 // 2. Do a LSR by <amt>
                 data >>= amt;
                 // 3. Get sequential 11..1 bits with sign bit + shifted bits.
-                data |= (((1 << (amt + 1)) - 1) << (63 - amt));
+                data |= (((uint64_t(1) << (amt + 1)) - 1) << (63 - amt));
 
                 return data;
             } else {
@@ -83,7 +83,7 @@ namespace cheeky::ops {
             // Rotate right, 0b001100[10] >> 2 => 0b[10]1100
 
             // 1. Get last <amt> bits, shift them left by 64 - <amt> bits
-            auto mirrored = (((1 << amt) - 1) & data) << (64 - amt); 
+            auto mirrored = (((uint64_t(1) << amt) - 1) & data) << (64 - amt); 
             // 2. Do a regular LSR 
             data >>= amt;
             // 3. Do OR with the value from step 1
@@ -100,7 +100,7 @@ namespace cheeky::ops {
     } 
 
        // TODO: tests + validate rule
-       constexpr uint64_t shift_by_rule_32(ShiftRule rule, uint32_t data, uint8_t amt) {
+       constexpr uint32_t shift_by_rule_32(ShiftRule rule, uint32_t data, uint16_t amt) {
         assert((0 <= amt) &&  (amt <= 31));
 
         if (amt == 0) {

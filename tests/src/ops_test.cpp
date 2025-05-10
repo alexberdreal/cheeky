@@ -3,7 +3,6 @@
 #include <gtest/gtest.h> 
 
 #include <ops/ops.h>
-
 #include <core/state.h>
 
 using namespace cheeky::ops;
@@ -90,6 +89,48 @@ TEST(OpsTest, OrrSh_test) {
     // Verify register transfer
     ASSERT_EQ(state.get_r_ref(8), 0x1234);  // x8 should now equal x0's original value
     ASSERT_EQ(state.get_r_ref(0), 0x1234);  // x0 should remain unchanged
+}
+
+TEST(OpsTest, OrrSh_LSL) {
+    OrrSh orr_sh;
+    State state;
+
+    // ORR x9, x2, x3, LSL #4
+    state.get_r_ref(2) = 0b00001;
+    state.get_r_ref(3) = 0b00001;
+    orr_sh.process(0xAA031049, state); // Encoding for shift=4, LSL
+    
+    // Expected: 0x0000FFFF0000FFFF | (0x1234567812345678 << 4)
+    ASSERT_EQ(state.get_r_ref(9), 0b10001);
+    ASSERT_EQ(state.get_r_ref(2), 0b00001); // Verify source unchanged
+}
+
+TEST(OpsTest, OrrSh_LSR) {
+    OrrSh orr_sh;
+    State state;
+
+    // ORR x9, x2, x3, LSL #3
+    state.get_r_ref(2) = 0b10000;
+    state.get_r_ref(3) = 0b11000;
+    orr_sh.process(0xAA430C49, state); // Encoding for shift=4, LSL
+    
+    // Expected: 0x0000FFFF0000FFFF | (0x1234567812345678 << 4)
+    ASSERT_EQ(state.get_r_ref(9), 0b10011);
+    ASSERT_EQ(state.get_r_ref(2), 0b10000); // Verify source unchanged
+}
+
+TEST(OpsTest, OrrSh_ASR) {
+    OrrSh orr_sh;
+    State state;
+
+    // ORR x9, x2, x3, ASR #2
+    state.get_r_ref(2) = 0b00000;
+    state.get_r_ref(3) = 0b10000 | (uint64_t(1) << 63);
+    orr_sh.process(0xAA830849, state); // Encoding for shift=4, LSL
+    
+    // Expected: 0x0000FFFF0000FFFF | (0x1234567812345678 << 4)
+    ASSERT_EQ(state.get_r_ref(9), (uint64_t(0b111) << 61) | 0b00100);
+    ASSERT_EQ(state.get_r_ref(2), 0b00000); // Verify source unchanged
 }
 
 int main(int argc, char** argv) {

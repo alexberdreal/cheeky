@@ -1,8 +1,6 @@
 #include <assert.h>
 
 #include <core/state.h>
-#include <iostream>
-
 
 namespace cheeky::core {
     // NZCV flags

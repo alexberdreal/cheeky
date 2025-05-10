@@ -2,7 +2,6 @@
 #include <mach/task.h>  // Task-related functions
 #include <mach/thread_act.h>  // Thread function
 #include <loader/mach_object.h>
-#include <iostream>
 #include <assert.h>
 #include <session/session.h>
 
