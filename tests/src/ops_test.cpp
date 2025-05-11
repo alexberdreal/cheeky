@@ -163,6 +163,27 @@ TEST(OpsTest, StrImm_test) {
     ASSERT_EQ(vm, 0xFFFF);
 }
 
+TEST(OpsTest, LdrImm_test) {
+    LdrImm ldr_imm;
+    State state;
+
+    uint32_t instr = 0xB9400FE8;
+
+    // ldr	w8, [sp, #0xc]
+    ASSERT_TRUE(ldr_imm.is_match(instr));
+
+    state.get_r_ref_32(31) = 0;
+
+    auto& w8 = state.get_r_ref_32(8);
+    auto& wsp = state.get_r_ref_32(31);
+    auto& vm = state.get_vm_with_offset_32(wsp + 0xc);
+    w8 = 0;
+    vm = 0xABC;
+    ldr_imm.process(instr, state); 
+
+    ASSERT_EQ(w8, 0xABC);
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
