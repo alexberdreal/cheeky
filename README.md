@@ -2,14 +2,16 @@
 
 ## What is done? 
 - Mach-O files parsing module (load commands + memory segments).
-- Basic ARM64 operations (add, adds, sub).
-- ARM64 CPU core state emulation (r0-31, PC, NZCV flags).
+- Basic ARM64 operations (add(s), sub(s), movz, str, ldr, ret, orr).
+- ARM64 CPU core state emulation (r0-31, PC, NZCV flags, stack).
 - Google tests of ops module.
 
 ## What should be done in the near future? 
-- Emulated memory, functions linking, dinamic libs loading.
-- Other ARM64 instructions.
+- Jumps support, proper frame ptr/link register updates + tests.
+- Functions linking, dynamic libs loading.
+- Syscalls processing, heap support (malloc has to be redirected by emulator's process).
 - Output of executed instructions at runtime (asm).
+- Disassembly without running, showing commands which are not currently supported.
 
 ## Building 
 
