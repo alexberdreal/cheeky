@@ -57,18 +57,9 @@ namespace cheeky::loader {
 
         for (auto lc_var : _load_commands) {
             std::visit([&found, this](auto& lc) {
-                if constexpr (std::is_same_v<MachObject::SegmentWithSections, std::decay_t<decltype(lc)>>) {
-                    const auto seg_name = "__TEXT";
-                    const auto sect_name = "__text";
-                    if (!memcmp(reinterpret_cast<const void*>(lc.segment.segname), reinterpret_cast<const void*>(seg_name), strlen(seg_name))) {                        
-                        for (lc_section_t section : lc.sections) {
-                            if (!memcmp(reinterpret_cast<const void*>(section.sectname), reinterpret_cast<const void*>(sect_name), strlen(sect_name))) {
-                                found = reinterpret_cast<const uint32_t*>(_data) + section.offset / sizeof(section.offset);
-                                break;
-                            }
-                        }
-                    }
-                }
+                if constexpr (std::is_same_v<MachObject::lc_entry_point_t, std::decay_t<decltype(lc)>>) {
+                    found = reinterpret_cast<const uint32_t*>(_data) + lc.entryoff / sizeof(uint32_t);
+                } 
             }, lc_var);
         }
 
@@ -80,7 +71,7 @@ namespace cheeky::loader {
         return found;
     }
 
-    std::optional<MachObject::lc_variant_t> MachObject::load_lc_from_address_unknown_type(char* data, int cmd) {
+    std::optional<MachObject::lc_variant_t> MachObject::load_lc_from_address_unknown_type(char* data, uint32_t cmd) {
         switch (cmd) {
             case LC_SEGMENT_64: {
                 SegmentWithSections sws;
@@ -89,6 +80,9 @@ namespace cheeky::loader {
                 assert((sws.segment.nsects * sizeof(lc_section_t) + sizeof(lc_segment_t)) == sws.segment.cmdsize);
                 memcpy(reinterpret_cast<void*>(sws.sections.data()), data + sizeof(lc_segment_t), sws.segment.nsects * sizeof(lc_section_t));
                 return { sws };
+            }
+            case LC_MAIN: {
+                return load_lc_from_address_known_type<lc_entry_point_t>(data);
             }
             default:
                 return std::nullopt;

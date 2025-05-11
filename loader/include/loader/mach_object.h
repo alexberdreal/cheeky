@@ -53,7 +53,7 @@ namespace cheeky::loader {
     private:
 
         // TODO: add the rest of load commands;
-        using lc_variant_t = std::variant<SegmentWithSections>;
+        using lc_variant_t = std::variant<SegmentWithSections, lc_entry_point_t>;
 
         /// Header;
         /// Only single-arch Mach-O format is supported atm, there must be no fat headers
@@ -74,7 +74,7 @@ namespace cheeky::loader {
         /// @param data pointer to memory where the load command resides. 
         /// @param cmd constant, can be found inside lc_base_t structure.
         /// @return lc_variant_t if load command is supported, otherwise - nullopt.
-        static std::optional<lc_variant_t> load_lc_from_address_unknown_type(char* data, int cmd);
+        static std::optional<lc_variant_t> load_lc_from_address_unknown_type(char* data, uint32_t cmd);
 
         /// @brief Loads load command with given type.
         /// @tparam LC_T one of lc_variant_t types.
