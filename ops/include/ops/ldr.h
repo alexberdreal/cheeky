@@ -32,9 +32,9 @@
 
 /*
     32-bit (size == 10)
-    STR <Wt>, [<Xn|SP>{, #<pimm>}]
+    LDR <Wt>, [<Xn|SP>{, #<pimm>}]
     64-bit (size == 11)
-    STR <Xt>, [<Xn|SP>{, #<pimm>}]
+    LDR <Xt>, [<Xn|SP>{, #<pimm>}]
 */
 
 namespace cheeky::ops {
