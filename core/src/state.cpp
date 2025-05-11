@@ -47,6 +47,10 @@ namespace cheeky::core {
         return _pc;
     }
 
+    void State::update_pc(uint64_t new_pc) {
+        _pc = new_pc;
+    }
+
     // General-purpose registers
 
     uint32_t& State::get_r_ref_32(size_t idx) {
@@ -73,5 +77,9 @@ namespace cheeky::core {
 
     bool State::is_active() const {
         return _is_active;
+    }
+
+    void State::deactivate() {
+        _is_active = false;
     }
 }

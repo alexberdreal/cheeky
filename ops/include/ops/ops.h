@@ -8,3 +8,4 @@
 #include <ops/movz.h>
 #include <ops/str.h>
 #include <ops/ldr.h>
+#include <ops/ret.h>

@@ -36,6 +36,7 @@ namespace cheeky::core {
 
         void advance_pc();
         uint64_t get_pc() const;
+        void update_pc(uint64_t new_pc);
 
         // General-purpose registers operations
         
@@ -49,5 +50,6 @@ namespace cheeky::core {
 
         // Is need to run next instructions
         bool is_active() const;
+        void deactivate();
     };
 }

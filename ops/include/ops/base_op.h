@@ -19,13 +19,13 @@ namespace cheeky::ops {
 
     // 0b010001 (X lower bits) -> 0b01000100000000000000000000000000 (32 bits with shifted to higher)
     constexpr uint32_t adjust_bits(uint32_t bits, uint32_t zeros) {
-        auto bits_len = core::log2(bits) + 1;
-        return bits << (31u - bits_len - zeros);
+        auto bits_len = core::log2(bits) + 1;   
+        return bits << (31u - bits_len - zeros + 1);
     }
 
     // 0b01[00011]00010110.. -> 0b00011 (5 bits)
     constexpr uint32_t get_base_fixed_bits(uint32_t fixed) {
-        return (fixed & 0x3F000000) >> 29;
+        return (fixed & 0x3E000000) >> 25;
     }
 
     // 0b01[00011000101]10.. -> 0b00[11111111111]00....
@@ -50,7 +50,7 @@ namespace cheeky::ops {
     }
 
     // TODO: tests + validate rule
-    inline uint64_t shift_by_rule_64(ShiftRule rule, uint64_t data, uint16_t amt) {
+    constexpr uint64_t shift_by_rule_64(ShiftRule rule, uint64_t data, uint16_t amt) {
         assert((0 <= amt) &&  (amt <= 63));
 
         if (amt == 0) {
@@ -168,7 +168,7 @@ namespace cheeky::ops {
         /// instruction format: x  x  0  1  1  0  1  0  0  0  1  ... 
         /// sb = 2 (number of x's), sb = 1 (only bit 29), raw_fixed = 0x11010001
         constexpr BaseOperation(uint32_t raw_fixed, uint32_t iz, uint32_t sb) :
-            _fixed_bits(adjust_bits(raw_fixed, iz)), 
+            _fixed_bits(adjust_bits(raw_fixed, iz + sb)), 
             _base_fixed_bits(get_base_fixed_bits(_fixed_bits)), 
             _mask(get_mask_from_fixed(raw_fixed, iz, sb)) {
                 // base mask should start at least from a third higher bit
