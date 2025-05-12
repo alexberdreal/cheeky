@@ -50,25 +50,54 @@ namespace cheeky::loader {
 
         return MachObject(*header, std::move(load_commands), fd, file_start, len);
     }
-
-            
-    const uint32_t* MachObject::load_instructions() {
+        
+    // Returns instructions 4-KB alligned ptr with PC offset from it
+    std::pair<const uint32_t*, uint64_t> MachObject::load_instructions() {
+        // pointer to 4KB-alligned TEXT segment 
         const uint32_t* found = nullptr;
+        // offset of alligned memory inside a file
+        std::optional<uint64_t> alligned_text_seg_off;
+        // offset of initial PC relative to alligned text segment 
+        std::optional<uint64_t> pc_off;
 
-        for (auto lc_var : _load_commands) {
-            std::visit([&found, this](auto& lc) {
+        for (const auto& lc_var : _load_commands) {
+            std::visit([&, this](const auto& lc) {
+                if constexpr (std::is_same_v<SegmentWithSections, std::decay_t<decltype(lc)>>) {
+                    const auto seg_name = "__TEXT";
+                    const auto sect_name = "__text";
+                    if (!memcmp(reinterpret_cast<const void*>(lc.segment.segname), reinterpret_cast<const void*>(seg_name), strlen(seg_name))) {
+                        for (lc_section_t section : lc.sections) {
+                            if (!memcmp(reinterpret_cast<const void*>(section.sectname), reinterpret_cast<const void*>(sect_name), strlen(sect_name))) {
+                                // data must be 4KB alligned in order to do PC-relative calculations
+                                int off = 4096 - (section.offset % 4096);
+                                found = reinterpret_cast<const uint32_t*>(_data) + (section.offset - off) / sizeof(uint32_t);
+                                alligned_text_seg_off.emplace(section.offset - off);
+                                break;
+                            }
+                        }
+                    }
+            }}, lc_var);
+        }
+
+        if (!alligned_text_seg_off.has_value() || !found) {
+            std::cerr << "cannot find text segment, fatal error" << std::endl;
+            std::terminate();
+        }
+
+        for (const auto& lc_var : _load_commands) {
+            std::visit([&, this](const auto& lc) {
                 if constexpr (std::is_same_v<MachObject::lc_entry_point_t, std::decay_t<decltype(lc)>>) {
-                    found = reinterpret_cast<const uint32_t*>(_data) + lc.entryoff / sizeof(uint32_t);
+                    pc_off = (lc.entryoff - *alligned_text_seg_off) / sizeof(uint32_t);
                 } 
             }, lc_var);
         }
 
-        if (!found) {
-            std::cerr << "No text segment found, fatal error" << std::endl;
+        if (!pc_off.has_value()) {
+            std::cerr << "No entry point load command found, fatal error" << std::endl;
             std::terminate();
         }
 
-        return found;
+        return { found, *pc_off };
     }
 
     std::optional<MachObject::lc_variant_t> MachObject::load_lc_from_address_unknown_type(char* data, uint32_t cmd) {

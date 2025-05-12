@@ -45,8 +45,9 @@ namespace cheeky::session {
             // TODO: proper stack initialization
             _state->get_r_ref_64(31) = 512 * 1024 - 1; 
             auto file = loader::MachObject::load(filepath);
-            auto instrs = file.load_instructions();
+            auto [instrs, off] = file.load_instructions();
             assert(instrs != nullptr);
+            _state->update_pc(off);
             while (_state->is_active()) {
                 _exec.execute(instrs[_state->get_pc()]);
                 _state->advance_pc();

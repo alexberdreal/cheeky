@@ -44,7 +44,7 @@ namespace cheeky::loader {
         /// Loads Mach-O executable internals from a disk
         static MachObject load(std::string_view path);
         // Gets mmaped __TEXT instructions 
-        const uint32_t* load_instructions();
+        std::pair<const uint32_t*, uint64_t> load_instructions();
         // Loads __TEXT rodata
         std::vector<uint8_t> load_rodata();
         // Loads __DATA segment

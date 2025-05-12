@@ -28,6 +28,7 @@ namespace cheeky::session {
     }
 
     void ExecutionUnit::execute(uint32_t bytes) {
+        std::cout << "execute " << std::hex << bytes << std::endl;
         auto op = find_operation(bytes);
 
         if (op == nullptr) {
