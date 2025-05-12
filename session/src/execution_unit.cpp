@@ -13,6 +13,7 @@ namespace cheeky::session {
         _ops.emplace(StrImm{}.base_fixed_bits(), std::make_shared<StrImm>());
         _ops.emplace(LdrImm{}.base_fixed_bits(), std::make_shared<LdrImm>());
         _ops.emplace(Ret{}.base_fixed_bits(), std::make_shared<Ret>());
+        _ops.emplace(Bl{}.base_fixed_bits(), std::make_shared<Bl>());
 
         _state = std::move(state);
     }
@@ -28,7 +29,6 @@ namespace cheeky::session {
     }
 
     void ExecutionUnit::execute(uint32_t bytes) {
-        std::cout << "execute " << std::hex << bytes << std::endl;
         auto op = find_operation(bytes);
 
         if (op == nullptr) {

@@ -9,3 +9,4 @@
 #include <ops/str.h>
 #include <ops/ldr.h>
 #include <ops/ret.h>
+#include <ops/bl.h>
