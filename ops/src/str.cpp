@@ -10,11 +10,11 @@ namespace cheeky::ops {
             auto enc = (bits & get_mask_from_bits(10, 11)) >> 11;
             
             if (enc == 0b11) {
-                dst = rt;
                 rn += simm9;
+                dst = rt;
             } else if (enc == 0b01) {
-                rn += simm9;
                 dst = rt;
+                rn += simm9;
             } else {
                 std::cerr << "Unknown StrImm instruction encoding, fatal error: " << bits << std::endl;
                 return false;

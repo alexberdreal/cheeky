@@ -204,6 +204,33 @@ TEST(OpsTest, Stur_test) {
     ASSERT_EQ(vm, 0);
 }
 
+TEST(OpsTest, Stp_test) {
+    Stp stp;
+    State state;
+
+    // stp	x29, x30, [sp, #0x10]
+
+    ASSERT_TRUE(stp.is_match(0xa9017bfd));
+
+    // set x29
+    state.get_r_ref_64(29) = 0xFA;
+    // set x30
+    state.get_r_ref_64(30) = 0xAB;
+    // set SP
+    state.get_r_ref_64(31) = 0xFF;
+
+    auto& vm1 = state.get_vm_with_offset_32(0xFF + 0x10);
+    auto& vm2 = state.get_vm_with_offset_32(0xFF + 0x10 + 8);
+
+    vm1 = 0;
+    vm2 = 0;
+
+    stp.process(0xa9017bfd, state); 
+
+    ASSERT_EQ(vm1, 0xFA);
+    ASSERT_EQ(vm2, 0xAB);
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

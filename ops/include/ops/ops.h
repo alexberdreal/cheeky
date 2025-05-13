@@ -11,3 +11,4 @@
 #include <ops/ret.h>
 #include <ops/bl.h>
 #include <ops/stur.h>
+#include <ops/stp.h>
