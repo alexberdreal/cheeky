@@ -231,6 +231,47 @@ TEST(OpsTest, Stp_test) {
     ASSERT_EQ(vm2, 0xAB);
 }
 
+TEST(OpsTest, Ldur_test) {
+    Ldur ldur;
+    State state;
+
+    // ldur	w8, [x29, #-0x4]
+
+    ASSERT_TRUE(ldur.is_match(0xb85fc3a8));
+
+    state.get_r_ref_64(29) = 0xFF;
+    state.get_vm_with_offset_32(0xFF - 0x4) = 0xABC;
+    auto& r8 = state.get_r_ref_32(8);
+    r8 = 0;
+
+    ldur.process(0xb85fc3a8, state); 
+
+    ASSERT_EQ(r8, 0xABC);
+}
+
+TEST(OpsTest, Ldp_test) {
+    Ldp ldp;
+    State state;
+
+    // ldp	x29, x30, [sp, #0x10]
+
+    ASSERT_TRUE(ldp.is_match(0xa9417bfd));
+
+    auto& x29 = state.get_r_ref_64(29);
+    auto& x30 = state.get_r_ref_64(30);
+
+    // set SP
+    state.get_r_ref_64(31) = 0xFF;
+
+    state.get_vm_with_offset_64(0xFF + 0x10) = 0xFA;
+    state.get_vm_with_offset_64(0xFF + 0x10 + 8) = 0xAB;
+
+    ldp.process(0xa9417bfd, state); 
+
+    ASSERT_EQ(x29, 0xFA);
+    ASSERT_EQ(x30, 0xAB);
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
