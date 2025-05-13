@@ -10,3 +10,4 @@
 #include <ops/ldr.h>
 #include <ops/ret.h>
 #include <ops/bl.h>
+#include <ops/stur.h>

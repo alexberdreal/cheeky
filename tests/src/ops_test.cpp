@@ -184,6 +184,26 @@ TEST(OpsTest, LdrImm_test) {
     ASSERT_EQ(w8, 0xABC);
 }
 
+TEST(OpsTest, Stur_test) {
+    Stur stur;
+    State state;
+
+    // stur	wzr, [x29, #-0x4]
+
+    ASSERT_TRUE(stur.is_match(0xb81fc3bf));
+
+    // mov	x29, #0xFF
+    state.get_r_ref_32(29) = 0xFF;
+
+    auto& vm = state.get_vm_with_offset_32(0xFF - 0x4);
+
+    vm = 0xABC;
+
+    stur.process(0xb81fc3bf, state); 
+
+    ASSERT_EQ(vm, 0);
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
