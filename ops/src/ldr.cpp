@@ -9,12 +9,12 @@ namespace cheeky::ops {
         auto str_pre_post_idx = [&state, bits = bits](auto src, auto& rn, auto& rt, auto simm9) -> bool {
             auto enc = (bits & get_mask_from_bits(10, 11)) >> 11;
             
-            if (enc == 0b11) {
-                rt = src;
-                rn += simm9;
-            } else if (enc == 0b01) {
+            if (enc == 0b11) { // pre index
                 rn += simm9;
                 rt = src;
+            } else if (enc == 0b01) { // post index 
+                rt = src;
+                rn += simm9;
             } else {
                 std::cerr << "Unknown LdrImm instruction encoding, fatal error: " << std::hex << bits << std::endl;
                 return false;
