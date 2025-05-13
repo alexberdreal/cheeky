@@ -19,7 +19,7 @@ namespace cheeky::ops {
                 dst2 = rt2;
                 rn += simm9;
             } else {
-                std::cerr << "Unknown StrImm instruction encoding, fatal error: " << bits << std::endl;
+                std::cerr << "Unknown Stp instruction encoding, fatal error: " << std::hex << bits << std::endl;
                 return false;
             }
 
@@ -42,7 +42,7 @@ namespace cheeky::ops {
                 return str_pre_post_idx(dst1, dst2, rn, rt1, rt2, simm);
             } else 
             {
-                std::cerr << "Unknown StrImm instruction format, fatal error: " << bits << std::endl;
+                std::cerr << "Unknown Stp instruction format, fatal error: " << std::hex << bits << std::endl;
                 return false;
             }
         } else if (sz == 0b10) {    // 64-bit version
@@ -61,11 +61,11 @@ namespace cheeky::ops {
                 return str_pre_post_idx(dst1, dst2, rn, rt1, rt2, simm);
             } else 
             {
-                std::cerr << "Unknown StrImm instruction format, fatal error: " << bits << std::endl;
+                std::cerr << "Unknown Stp instruction format, fatal error: " << std::hex << bits << std::endl;
                 return false;
             }
         } else {
-            std::cerr << "fatal error: unknown size of StrImm op: " << sz << " bits: " << bits << std::endl;
+            std::cerr << "fatal error: unknown size of Stp op: " << sz << " bits: " << bits << std::endl;
             return false;
         }
 
