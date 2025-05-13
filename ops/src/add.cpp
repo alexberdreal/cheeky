@@ -1,7 +1,7 @@
 #include <ops/add.h>
 
 namespace cheeky::ops {
-    void AddImm::process(uint32_t bits, State &state) {
+    bool AddImm::process(uint32_t bits, State &state) {
         auto is_sf_set = is_bit_set(bits, 31);
         auto is_sh_set = is_bit_set(bits, 22);
         
@@ -32,5 +32,7 @@ namespace cheeky::ops {
 
             add(rd, rn);
         }
+
+        return true;
     }
 }

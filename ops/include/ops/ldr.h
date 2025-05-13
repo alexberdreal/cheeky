@@ -45,7 +45,7 @@ namespace cheeky::ops {
         bool is_unsgn_offset(uint32_t bits);
     public:
         constexpr LdrImm() : BaseOperation(0b11100, 0, 2) {}
-        void process(uint32_t bits, State &state) override;
+        bool process(uint32_t bits, State &state) override;
         bool is_match(uint32_t bits) override;
     };
 }

@@ -28,16 +28,16 @@ namespace cheeky::session {
         return (it == _ops.end()) ? nullptr : it->second;
     }
 
-    void ExecutionUnit::execute(uint32_t bytes) {
+    bool ExecutionUnit::execute(uint32_t bytes) {
         auto op = find_operation(bytes);
 
         if (op == nullptr) {
             std::cerr << "Instruction is not supported: " << std::hex << bytes << std::endl;
-            std::terminate();
+            return false;
         }
 
         assert(_state != nullptr);
 
-        op->process(bytes, *_state);
+        return op->process(bytes, *_state);
     }
 }

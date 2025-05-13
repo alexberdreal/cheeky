@@ -17,6 +17,6 @@ namespace cheeky::session {
         ExecutionUnit(std::shared_ptr<State> state);
 
         // Returns 1 if there is more instructions to execute, 0 - otherwise
-        void execute(uint32_t bytes);
+        bool execute(uint32_t bytes);
     };
 }

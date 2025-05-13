@@ -72,14 +72,4 @@ namespace cheeky::core {
     uint64_t& State::get_vm_with_offset_64(uint64_t offset) {
         return *reinterpret_cast<uint64_t*>(&_stack[offset]);
     }
-
-    // Is active state
-
-    bool State::is_active() const {
-        return _is_active;
-    }
-
-    void State::deactivate() {
-        _is_active = false;
-    }
 }

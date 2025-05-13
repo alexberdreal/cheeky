@@ -1,7 +1,7 @@
 #include <ops/orr.h>
 
 namespace cheeky::ops {
-    void OrrSh::process(uint32_t bits, State &state) {
+    bool OrrSh::process(uint32_t bits, State &state) {
         auto is_sf_set = is_bit_set(bits, 31);
         
         auto rd_idx = (bits & get_mask_from_bits(0, 4)) >> 0;
@@ -37,5 +37,7 @@ namespace cheeky::ops {
                 rd = rm_shft;
             }
         }
+
+        return true;
     }
 }

@@ -1,7 +1,7 @@
 #include <ops/sub.h>
 
 namespace cheeky::ops {
-    void SubImm::process(uint32_t bits, State &state) {
+    bool SubImm::process(uint32_t bits, State &state) {
         auto is_sf_set = is_bit_set(bits, 31);
         auto is_sh_set = is_bit_set(bits, 22);
         
@@ -32,5 +32,7 @@ namespace cheeky::ops {
 
             sub(rd, rn);
         }
+
+        return true;
     }
 }

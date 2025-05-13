@@ -1,7 +1,7 @@
 #include <ops/bl.h>
 
 namespace cheeky::ops {
-    void Bl::process(uint32_t bits, State &state) {
+    bool Bl::process(uint32_t bits, State &state) {
 
         auto simm32 = (bits & get_mask_from_bits(0, 25)) << 6;
 
@@ -12,5 +12,7 @@ namespace cheeky::ops {
         
         // update PC
         state.update_pc(state.get_pc() + simm32_shft - 1);
+
+        return true;
     }
 }

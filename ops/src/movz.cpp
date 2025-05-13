@@ -1,7 +1,7 @@
 #include <ops/movz.h>
 
 namespace cheeky::ops {
-    void Movz::process(uint32_t bits, State &state) {
+    bool Movz::process(uint32_t bits, State &state) {
         auto is_sf_set = is_bit_set(bits, 31);
         
         auto rd_idx = (bits & get_mask_from_bits(0, 4)) >> 0;
@@ -23,5 +23,7 @@ namespace cheeky::ops {
 
             rd = (imm16 << shft);
         }
+
+        return true;
     }
 }

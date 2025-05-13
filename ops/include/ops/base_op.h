@@ -183,6 +183,6 @@ namespace cheeky::ops {
             return (bits & _mask) == _fixed_bits;
         }
 
-        virtual void process(uint32_t data, State&) = 0;
+        virtual bool process(uint32_t data, State&) = 0;
     };
 }

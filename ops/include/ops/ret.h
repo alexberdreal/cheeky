@@ -16,6 +16,6 @@ namespace cheeky::ops {
         using State = core::State;
     public:
         constexpr Ret() : BaseOperation(0b1101011001011111000000, 0, 0) {}
-        void process(uint32_t bits, State &state) override;
+        bool process(uint32_t bits, State &state) override;
     };
 }
