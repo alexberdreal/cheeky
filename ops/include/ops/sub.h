@@ -11,8 +11,6 @@
     SUB <Xd|SP>, <Xn|SP>, #<imm>{, <shift>}
 */
 
-// TODO: add support of S instructions (simply update NZCV flags if bit 29 is set)
-
 namespace cheeky::ops {
     class SubImm : public BaseOperation {
         using State = core::State;

@@ -214,6 +214,21 @@ TEST(OpsTest, Ldp) {
     ASSERT_EQ(state.get_r_ref_64(30), 0xAB) << "X30 load mismatch";
 }
 
+TEST(OpsTest, Adrp) {
+    Adrp op;
+    State state;
+    
+    // Test: adrp	x9, 1 ;   
+    uint64_t vm_addr = 0x100003f68;
+    state.update_pc(vm_addr / 4);
+    const uint32_t instr = 0xb0000009;
+    
+    ASSERT_TRUE(op.is_match(instr));
+    op.process(instr, state);
+    
+    ASSERT_EQ(state.get_r_ref_64(9), 0x100004000 / 4) << "X29 load mismatch";
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

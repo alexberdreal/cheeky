@@ -6,8 +6,8 @@ namespace cheeky::session {
     class ExecutionUnit {
         using State = core::State;
     private:
-        // 0 < opcode < 63
-        // TODO: change to array of priority list (the most used instructions should be first)
+        // 0 < opcode < 16
+        // TODO: implement decision tree for efficient lookup
         std::unordered_multimap<uint8_t, std::shared_ptr<ops::BaseOperation>> _ops;
         std::shared_ptr<State> _state;
 

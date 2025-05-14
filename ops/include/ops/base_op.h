@@ -23,9 +23,12 @@ namespace cheeky::ops {
         return bits << (31u - bits_len - zeros + 1);
     }
 
-    // 0b01[00011]00010110.. -> 0b00011 (5 bits)
+    // 0b010[0011]00010110.. -> 0b0011 (4 bits)
+    // while there is not much of instructions and the most of them are for different purposes 
+    // (not from the same family), it is OK to have just maximum of 16 batches inside a lookup table
+    // It will be much faster when decision trees are done
     constexpr uint32_t get_base_fixed_bits(uint32_t fixed) {
-        return (fixed & 0x3E000000) >> 25;
+        return (fixed & 0x1E000000) >> 25;
     }
 
     // 0b01[00011000101]10.. -> 0b00[11111111111]00....
@@ -172,14 +175,14 @@ namespace cheeky::ops {
             _base_fixed_bits(get_base_fixed_bits(_fixed_bits)), 
             _mask(get_mask_from_fixed(raw_fixed, iz, sb)) {
                 // base mask should start at least from a third higher bit
-                assert(sb <= 2);
+                assert(sb <= 3);
             }
 
         constexpr uint32_t base_fixed_bits() {
             return _base_fixed_bits;
         }
 
-        virtual bool is_match(uint32_t bits) {
+        virtual bool  is_match(uint32_t bits) {
             return (bits & _mask) == _fixed_bits;
         }
 
