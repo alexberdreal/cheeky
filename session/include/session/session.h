@@ -51,5 +51,9 @@ namespace cheeky::session {
             while (_exec.execute(instrs[_state->get_pc()])) 
                 _state->advance_pc();
         }
+
+        std::shared_ptr<State> get_state() {
+            return _state;
+        }
     };
 }

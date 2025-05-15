@@ -11,14 +11,14 @@ namespace cheeky::ops {
             auto rn = state.get_r_ref_32(rn_idx);
             auto& rt = state.get_r_ref_32(rt_idx);
 
-            auto dst = state.get_vm_with_offset_32(rn + static_cast<int32_t>(uimm9));
-            rt = dst;
+            auto src = state.get_vm_with_offset_32(rn + static_cast<int32_t>(uimm9));
+            rt = src;
         } else if (sz == 0b11) {    // 64 bit
             auto rn = state.get_r_ref_64(rn_idx);
             auto& rt = state.get_r_ref_64(rt_idx);
 
-            auto dst = state.get_vm_with_offset_64(rn + static_cast<int32_t>(uimm9));
-            rt = dst;
+            auto src = state.get_vm_with_offset_64(rn + static_cast<int32_t>(uimm9));
+            rt = src;
         } else {
             std::cerr << "fatal error: unknown size of Ldur op: " << sz << " bits: " << bits << std::endl;
             return false;

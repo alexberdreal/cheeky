@@ -41,7 +41,7 @@ namespace cheeky::ops {
                 return false;
             }
         } else if (sz == 0b11) {
-            auto& rn = state.get_r_ref_64(rn_idx);
+            auto rn = state.get_r_ref_64(rn_idx);
             auto rt = (rt_idx == 31) ? 0 : state.get_r_ref_64(rt_idx);
 
             if (is_unsgn_offset(bits)) {

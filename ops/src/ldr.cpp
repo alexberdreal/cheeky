@@ -42,7 +42,7 @@ namespace cheeky::ops {
             }
         } else if (sz == 0b11) {
             auto& rn = state.get_r_ref_64(rn_idx);
-            auto rt = state.get_r_ref_64(rt_idx);
+            auto& rt = state.get_r_ref_64(rt_idx);
 
             if (is_unsgn_offset(bits)) {
                 int64_t simm9 = ((bits & get_mask_from_bits(10, 21)) >> 10) * 8;

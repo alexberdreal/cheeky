@@ -17,13 +17,13 @@ namespace cheeky::ops {
 
             // 64 bit case
             if (state.get_r_ref_64(rt_idx) & (uint64_t(1) << bit_pos)) {
-                state.update_pc(state.get_pc() + imm14);
+                state.update_pc(state.get_pc() + imm14 - 1);
             }
         } else {
             auto bit_pos = b40;
             
             if (state.get_r_ref_32(rt_idx) & (1 << bit_pos)) {
-                state.update_pc(state.get_pc() + imm14);
+                state.update_pc(state.get_pc() + imm14 - 1);
             }
         }
 
