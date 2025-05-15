@@ -23,12 +23,12 @@ namespace cheeky::ops {
         return bits << (31u - bits_len - zeros + 1);
     }
 
-    // 0b010[0011]00010110.. -> 0b0011 (4 bits)
+    // 0b010[001]100010110.. -> 0b001 (3 bits)
     // while there is not much of instructions and the most of them are for different purposes 
-    // (not from the same family), it is OK to have just maximum of 16 batches inside a lookup table
+    // (not from the same family), it is OK to have just maximum of 8 batches inside a lookup table
     // It will be much faster when decision trees are done
     constexpr uint32_t get_base_fixed_bits(uint32_t fixed) {
-        return (fixed & 0x1E000000) >> 25;
+        return (fixed & 0x1C000000) >> 26;
     }
 
     // 0b01[00011000101]10.. -> 0b00[11111111111]00....

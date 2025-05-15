@@ -29,6 +29,7 @@ namespace cheeky::session {
 
     std::shared_ptr<ops::BaseOperation> ExecutionUnit::find_operation(uint32_t bytes) {
         auto base_bits = ops::get_base_fixed_bits(bytes);
+
         auto it = _ops.find(base_bits);
         while (it != _ops.end() && !it->second->is_match(bytes)) {
             it++;

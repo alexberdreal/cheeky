@@ -91,7 +91,6 @@ namespace cheeky::ops {
 
     bool Csinc::is_match(uint32_t instr) {
         auto mask = 0x7FE00C00;
-        std::cout << "check csinc: " << (instr & mask) << " right: " << 0x1A800400 << std::endl;
         return (instr & mask) == 0x1A800400;
     }
 }
