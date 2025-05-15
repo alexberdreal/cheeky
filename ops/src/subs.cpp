@@ -49,7 +49,7 @@ namespace cheeky::ops {
                 state.set_v_flag(v_flag);
             }
 
-            state.set_z_flag(rn + imm == 0);
+            state.set_z_flag(rn - imm == 0);
             // subs sets the Carry flag in case of no underflow (no borrowing)
             // rn - imm >= min -> rn >= min + imm -> rn >= 0 + imm
             state.set_c_flag(imm <= rn);

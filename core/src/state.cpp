@@ -1,6 +1,7 @@
 #include <assert.h>
 
 #include <core/state.h>
+#include <iostream>
 
 namespace cheeky::core {
     // NZCV flags
@@ -65,11 +66,19 @@ namespace cheeky::core {
 
     // Virtual memory accessors 
 
-    uint32_t& State::get_vm_with_offset_32(uint32_t offset) {
+    uint32_t& State::get_vm_with_offset_32(int32_t offset) {
+        if (offset < 0 || offset > STACK_SIZE) {
+            std::cerr << "fatal error: stack overflow" << std::endl;
+            std::terminate(); 
+        } 
         return *reinterpret_cast<uint32_t*>(&_stack[offset]);
     }
 
-    uint64_t& State::get_vm_with_offset_64(uint64_t offset) {
+    uint64_t& State::get_vm_with_offset_64(int64_t offset) {
+        if (offset < 0 || offset > STACK_SIZE) {
+            std::cerr << "fatal error: stack overflow" << std::endl;
+            std::terminate(); 
+        } 
         return *reinterpret_cast<uint64_t*>(&_stack[offset]);
     }
 }

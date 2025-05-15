@@ -23,7 +23,7 @@ enum class CondCode : uint8_t {
 bool is_cond_true(const cheeky::core::State& state, uint8_t cond) {
     switch (static_cast<CondCode>(cond))
     {
-    case CondCode::EQ:
+    case CondCode::EQ: 
         return state.get_z_flag();
     case CondCode::NE:
         return !state.get_z_flag();
@@ -69,9 +69,16 @@ namespace cheeky::ops {
         auto cond = (bits & get_mask_from_bits(12, 15)) >> 12;
         auto rm_idx = (bits & get_mask_from_bits(16, 20)) >> 16;
 
+        auto is_cset = rm_idx == 0b11111 && ((cond >> 1) != 0b111) && rn_idx == 0b11111;
+
         assert(0 <= cond && cond <= 0xF);
 
         if (is_sf_set) {
+            if (is_cset) {
+                cond ^= 1;
+                state.get_r_ref_64(rd_idx) = is_cond_true(state, cond);
+                return true;
+            }
             // 64 bit case
             if (is_cond_true(state, cond)) {
                 state.get_r_ref_64(rd_idx) = (rn_idx == 31) ? 0 : state.get_r_ref_64(rn_idx);
@@ -79,6 +86,12 @@ namespace cheeky::ops {
                 state.get_r_ref_64(rd_idx) = ((rm_idx == 31) ? 0 : state.get_r_ref_64(rm_idx)) + 1;
             }
         } else {
+            if (is_cset) {
+                cond ^= 1;
+                state.get_r_ref_32(rd_idx) = is_cond_true(state, cond);
+                return true;
+            }
+
             if (is_cond_true(state, cond)) {
                 state.get_r_ref_32(rd_idx) = (rn_idx == 31) ? 0 : state.get_r_ref_32(rn_idx);
             } else {

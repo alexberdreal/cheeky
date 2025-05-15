@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <bitset>
 
+const size_t STACK_SIZE = 512 * 1024;
+
 namespace cheeky::core {
     class State {
     private:
@@ -13,7 +15,7 @@ namespace cheeky::core {
         std::bitset<4> _nzcv; 
 
         // TODO: malloc, now just 512 * 1024 bytes (512 KB)
-        std::uint8_t _stack[512 * 1024];
+        std::uint8_t _stack[STACK_SIZE];
     
     public:
         // NZCV flags 
@@ -43,7 +45,7 @@ namespace cheeky::core {
 
         // Virtual memory accessors
         // Only stack is supported at the moment
-        uint32_t& get_vm_with_offset_32(uint32_t offset);
-        uint64_t& get_vm_with_offset_64(uint64_t offset);
+        uint32_t& get_vm_with_offset_32(int32_t offset);
+        uint64_t& get_vm_with_offset_64(int64_t offset);
     };
 }

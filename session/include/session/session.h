@@ -48,9 +48,8 @@ namespace cheeky::session {
             auto [instrs, off] = file.load_instructions();
             assert(instrs != nullptr);
             _state->update_pc(off);
-            while (_exec.execute(instrs[_state->get_pc()])) {
+            while (_exec.execute(instrs[_state->get_pc()])) 
                 _state->advance_pc();
-            }
         }
     };
 }
