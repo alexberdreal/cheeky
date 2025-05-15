@@ -226,7 +226,35 @@ TEST(OpsTest, Adrp) {
     ASSERT_TRUE(op.is_match(instr));
     op.process(instr, state);
     
-    ASSERT_EQ(state.get_r_ref_64(9), 0x100004000 / 4) << "X29 load mismatch";
+    ASSERT_EQ(state.get_r_ref_64(9), 0x100004000 / 4) << "X9 load mismatch";
+}
+
+TEST(OpsTest, CsetConditionTrue) {
+    Csinc op;
+    State state;
+    
+    // Test: CSET X9, NE (set if Not Equal)
+    const uint32_t instr = 0x9A9F07E9; // Encoded cset x9, ne
+    state.set_z_flag(false); // Z=0 (NE condition is true)
+    
+    ASSERT_TRUE(op.is_match(instr));
+    op.process(instr, state);
+    
+    ASSERT_EQ(state.get_r_ref_64(9), 1) << "X9 should be 1 (NE=true)";
+}
+
+TEST(OpsTest, CsetConditionFalse) {
+    Csinc op;
+    State state;
+    
+    // Test: CSET X10, EQ (set if Equal)
+    const uint32_t instr = 0x9A9F17EA; // Encoded cset x10, eq
+    state.set_z_flag(false); // Z=0 (EQ condition is false)
+    
+    ASSERT_TRUE(op.is_match(instr));
+    op.process(instr, state);
+    
+    ASSERT_EQ(state.get_r_ref_64(10), 0) << "X10 should be 0 (EQ=false)";
 }
 
 int main(int argc, char** argv) {

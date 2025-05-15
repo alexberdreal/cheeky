@@ -16,3 +16,5 @@
 #include <ops/ldp.h>
 #include <ops/b.h>
 #include <ops/adrp.h>
+#include <ops/csinc.h>
+#include <ops/tbnz.h>

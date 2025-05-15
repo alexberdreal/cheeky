@@ -1,0 +1,22 @@
+#pragma once
+#include <ops/base_op.h>
+
+// 31   30  29  28  27  26  25  24  23  22  21  20  19  18  17  16  15  14  13  12  11  10  9  8  7  6  5  4  3  2  1  0
+// sf   0   0   1   1   0   1   0   1   0   0  |        Rm         |    cond      | 0   1  |    Rn        |      Rd
+
+/*
+    32-bit (sf == 0)
+    CSINC <Wd>, <Wn>, <Wm>, <cond>
+    64-bit (sf == 1)
+    CSINC <Xd>, <Xn>, <Xm>, <cond>
+*/
+
+namespace cheeky::ops {
+    class Csinc : public BaseOperation {
+        using State = core::State;
+    public:
+        constexpr Csinc() : BaseOperation(0b110101, 2, 1) {}
+        bool process(uint32_t bits, State &state) override;
+        bool is_match(uint32_t instr) override;
+    };
+}
