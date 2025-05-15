@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(cheeky)
 
+add_compile_definitions(PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}")
+
 # Subdirectories
 add_subdirectory(core)
 add_subdirectory(loader)

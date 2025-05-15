@@ -7,7 +7,8 @@ using namespace cheeky;
 
 TEST(ExecTest, SimpleBranchTest) {
     // TODO: path must start from the project root dir
-    session::Session sesh("../tests/data/branching");
+    std::string path { PROJECT_ROOT_DIR };
+    session::Session sesh(path + "/tests/data/branching");
     auto state = sesh.get_state();
 
     ASSERT_EQ(state->get_r_ref_32(0), 100) << "Returned value must be incremented up to 100";
