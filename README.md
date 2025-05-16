@@ -4,12 +4,13 @@
 - Mach-O files parsing module (load commands + memory segments).
 - Basic ARM64 operations (arithmetic + control + load/stores + flag versions).
 - ARM64 CPU core state emulation (r0-31, PC, NZCV flags, stack).
+- Decision tree for fast instruction pattern matching.
 - Ops unit tests.
 - Exec unit tests (entire emulation's final state validation).
 
 ## What's in progress? 
 - Logging (spdlog).
-- Decision tree for efficient instruction pattern matching.
+- Instruction decoding inside decision tree.
 
 ## What's next?
 - Dyn libs support.
@@ -18,6 +19,10 @@
 - Disassembly without running, showing commands which are not currently supported.
 
 ## Building 
+
+Generate decision tree: 
+
+`python3 generate_tree.py tests/src/base_opp.cpp`
 
 Emulator binary + no tests (default):
 
