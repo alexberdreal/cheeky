@@ -1,6 +1,16 @@
 #include <ops/stp.h>
 
 namespace cheeky::ops {
+    static bool is_pre_post_idx(uint32_t bits) {
+        auto fixed = ((bits & get_mask_from_bits(22, 30)) >> 22);
+        return fixed == 0b010100010 || fixed == 0b010100110;
+    }
+
+    static bool is_sgn_offset(uint32_t bits) {
+        auto fixed = ((bits & get_mask_from_bits(22, 30)) >> 22);
+        return fixed == 0b010100100;
+    }
+
     bool Stp::process(uint32_t bits, State &state) {
         auto rt1_idx = (bits & get_mask_from_bits(0, 4)) >> 0;
         auto rn_idx = (bits & get_mask_from_bits(5, 9)) >> 5;
@@ -70,19 +80,5 @@ namespace cheeky::ops {
         }
 
         return true;
-    }
-
-    bool Stp::is_pre_post_idx(uint32_t bits) {
-        auto fixed = ((bits & get_mask_from_bits(22, 30)) >> 22);
-        return fixed == 0b010100010 || fixed == 0b010100110;
-    }
-
-    bool Stp::is_sgn_offset(uint32_t bits) {
-        auto fixed = ((bits & get_mask_from_bits(22, 30)) >> 22);
-        return fixed == 0b010100100;
-    }
-
-    bool Stp::is_match(uint32_t bits) {
-        return is_pre_post_idx(bits) || is_sgn_offset(bits);
     }
 }

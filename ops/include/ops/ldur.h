@@ -14,10 +14,5 @@
 */
 
 namespace cheeky::ops {
-    class Ldur : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr Ldur() : BaseOperation(0b111000010, 0, 2) {}
-        bool process(uint32_t bits, State &state) override;
-    };
+    REGISTER_OPERATION(Ldur)
 }

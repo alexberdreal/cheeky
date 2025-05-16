@@ -12,10 +12,5 @@
 */
 
 namespace cheeky::ops {
-    class Bl : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr Bl() : BaseOperation(0b100101, 0, 0) {}
-        bool process(uint32_t bits, State &state) override;
-    };
+    REGISTER_OPERATION(Bl)
 }

@@ -1,6 +1,14 @@
 #include <ops/ldr.h>
 
 namespace cheeky::ops {
+    static bool is_pre_post_idx(uint32_t bits) {
+        return ((bits & get_mask_from_bits(21, 29)) >> 21) == 0b111000010 && (bits & get_mask_from_bits(10, 11)) >> 10 != 0;
+    }
+
+    static bool is_unsgn_offset(uint32_t bits) {
+        return ((bits & get_mask_from_bits(22, 29)) >> 22) == 0b11100101;
+    }
+
     bool LdrImm::process(uint32_t bits, State &state) {
         auto rt_idx = (bits & get_mask_from_bits(0, 4)) >> 0;
         auto rn_idx = (bits & get_mask_from_bits(5, 9)) >> 5;
@@ -63,17 +71,5 @@ namespace cheeky::ops {
         }
 
         return true;
-    }
-
-    bool LdrImm::is_pre_post_idx(uint32_t bits) {
-        return ((bits & get_mask_from_bits(21, 29)) >> 21) == 0b111000010 && (bits & get_mask_from_bits(10, 11)) >> 10 != 0;
-    }
-
-    bool LdrImm::is_unsgn_offset(uint32_t bits) {
-        return ((bits & get_mask_from_bits(22, 29)) >> 22) == 0b11100101;
-    }
-
-    bool LdrImm::is_match(uint32_t bits) {
-        return is_pre_post_idx(bits) || is_unsgn_offset(bits);
     }
 }

@@ -14,10 +14,5 @@
 */
 
 namespace cheeky::ops {
-    class Stur : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr Stur() : BaseOperation(0b111000000, 0, 2) {}
-        bool process(uint32_t bits, State &state) override;
-    };
+    REGISTER_OPERATION(Stur)
 }

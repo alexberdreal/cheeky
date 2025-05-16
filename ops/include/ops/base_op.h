@@ -153,39 +153,12 @@ namespace cheeky::ops {
         }
     } 
 
-    // sz - skipped zeros
-    // iz - insignigicant zeros
-    class BaseOperation {
-        using State = core::State;
-    private: 
-        uint32_t _fixed_bits;          
-        uint32_t _mask;    
-        uint32_t _base_fixed_bits; 
-    public: 
-        /// raw_fixed - fixed bits, starting from 1
-        /// iz (insignificant zeros) - number of zeros, at the start of fixed bits
-        /// sb (skipped bits) - number of skipped bits at the start of instruction
-        /// 
-        /// Example: 
-        /// bytes:              31 30 29 28 27 26 25 24 23 22 21 ...
-        /// instruction format: x  x  0  1  1  0  1  0  0  0  1  ... 
-        /// sb = 2 (number of x's), sb = 1 (only bit 29), raw_fixed = 0x11010001
-        constexpr BaseOperation(uint32_t raw_fixed, uint32_t iz, uint32_t sb) :
-            _fixed_bits(adjust_bits(raw_fixed, iz + sb)), 
-            _base_fixed_bits(get_base_fixed_bits(_fixed_bits)), 
-            _mask(get_mask_from_fixed(raw_fixed, iz, sb)) {
-                // base mask should start at least from a third higher bit
-                assert(sb <= 3);
-            }
-
-        constexpr uint32_t base_fixed_bits() {
-            return _base_fixed_bits;
-        }
-
-        virtual bool  is_match(uint32_t bits) {
-            return (bits & _mask) == _fixed_bits;
-        }
-
-        virtual bool process(uint32_t data, State&) = 0;
-    };
+    bool handle_instruction(uint32_t instruction, core::State& state);
 }
+
+#define REGISTER_OPERATION(name)                            \
+    class name {                                            \
+        public:                                             \
+        using State = core::State;                          \
+        static bool process(uint32_t bits, State &state);   \
+    }; 

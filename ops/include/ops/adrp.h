@@ -12,11 +12,5 @@
 */
 
 namespace cheeky::ops {
-    class Adrp : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr Adrp() : BaseOperation(0b10000, 0, 3) {}
-        bool process(uint32_t bits, State &state) override;
-        bool is_match(uint32_t instr) override; 
-    };
+    REGISTER_OPERATION(Adrp)
 }

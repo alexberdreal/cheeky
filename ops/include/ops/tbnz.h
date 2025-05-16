@@ -9,10 +9,5 @@
 */
 
 namespace cheeky::ops {
-    class Tbnz : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr Tbnz() : BaseOperation(0b110111, 1, 1) {}
-        bool process(uint32_t bits, State &state) override;
-    };
+    REGISTER_OPERATION(Tbnz)
 }

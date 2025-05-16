@@ -12,10 +12,5 @@
 */
 
 namespace cheeky::ops {
-    class SubImm : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr SubImm() : BaseOperation(0b10100010, 0, 1) {}
-        bool process(uint32_t bits, State &state) override;
-    };
+    REGISTER_OPERATION(SubImm)
 }

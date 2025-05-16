@@ -1,6 +1,15 @@
 #include <ops/str.h>
 
 namespace cheeky::ops {
+    
+    static bool is_pre_post_idx(uint32_t bits) {
+        return ((bits & get_mask_from_bits(21, 29)) >> 21) == 0b111000000 && ((bits & get_mask_from_bits(10, 11)) >> 10) != 0;
+    }
+
+    static bool is_unsgn_offset(uint32_t bits) {
+        return ((bits & get_mask_from_bits(22, 29)) >> 22) == 0b11100100;
+    }
+
     bool StrImm::process(uint32_t bits, State &state) {
         auto rt_idx = (bits & get_mask_from_bits(0, 4)) >> 0;
         auto rn_idx = (bits & get_mask_from_bits(5, 9)) >> 5;
@@ -63,17 +72,5 @@ namespace cheeky::ops {
         }
 
         return true;
-    }
-
-    bool StrImm::is_pre_post_idx(uint32_t bits) {
-        return ((bits & get_mask_from_bits(21, 29)) >> 21) == 0b111000000 && ((bits & get_mask_from_bits(10, 11)) >> 10) != 0;
-    }
-
-    bool StrImm::is_unsgn_offset(uint32_t bits) {
-        return ((bits & get_mask_from_bits(22, 29)) >> 22) == 0b11100100;
-    }
-
-    bool StrImm::is_match(uint32_t bits) {
-        return is_pre_post_idx(bits) || is_unsgn_offset(bits);
     }
 }

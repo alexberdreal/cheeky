@@ -4,10 +4,8 @@
 #include <core/state.h>
 #include <array>
 
-#include <session/execution_unit.h>
-
 #include <loader/mach_object.h>
-
+#include <ops/base_op.h>
 
 /*
 
@@ -39,16 +37,15 @@ namespace cheeky::session {
         void* _data;
         void* _instructions;
         std::shared_ptr<State> _state = std::make_shared<State>();
-        session::ExecutionUnit _exec;
     public: 
-        Session(std::string_view filepath) : _exec(_state) {
+        Session(std::string_view filepath) {
             // TODO: proper stack initialization
             _state->get_r_ref_64(31) = 512 * 1024 - 1; 
             auto file = loader::MachObject::load(filepath);
             auto [instrs, off] = file.load_instructions();
             assert(instrs != nullptr);
             _state->update_pc(off);
-            while (_exec.execute(instrs[_state->get_pc()])) 
+            while (ops::handle_instruction(instrs[_state->get_pc()], *_state)) 
                 _state->advance_pc();
         }
 

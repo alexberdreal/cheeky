@@ -12,10 +12,5 @@
 */
 
 namespace cheeky::ops {
-    class Movz : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr Movz() : BaseOperation(0b10100101, 0, 1) {}
-        bool process(uint32_t bits, State &state) override;
-    };
+    REGISTER_OPERATION(Movz)
 }

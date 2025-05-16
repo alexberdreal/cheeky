@@ -11,13 +11,6 @@
     ADD <Xd|SP>, <Xn|SP>, #<imm>{, <shift>}
 */
 
-
-
 namespace cheeky::ops {
-    class AddImm : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr AddImm() : BaseOperation(0b100010, 2, 1) {}
-        bool process(uint32_t bits, State &state) override;
-    };
+    REGISTER_OPERATION(AddImm)
 }

@@ -38,14 +38,5 @@
 */
 
 namespace cheeky::ops {
-    class Ldp : public BaseOperation {
-        using State = core::State;
-    private: 
-        bool is_pre_post_idx(uint32_t bits);
-        bool is_sgn_offset(uint32_t bits);
-    public:
-        constexpr Ldp() : BaseOperation(0b10100, 1, 1) {}
-        bool process(uint32_t bits, State &state) override;
-        bool is_match(uint32_t bits) override;
-    };
+    REGISTER_OPERATION(Ldp)
 }

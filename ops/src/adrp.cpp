@@ -14,8 +14,4 @@ namespace cheeky::ops {
     
         return true;
     }
-
-    bool Adrp::is_match(uint32_t instr) {
-        return (instr & 0x9F000000) == 0x90000000;
-    }
 }

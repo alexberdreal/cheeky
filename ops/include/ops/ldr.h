@@ -38,14 +38,5 @@
 */
 
 namespace cheeky::ops {
-    class LdrImm : public BaseOperation {
-        using State = core::State;
-    private: 
-        bool is_pre_post_idx(uint32_t bits);
-        bool is_unsgn_offset(uint32_t bits);
-    public:
-        constexpr LdrImm() : BaseOperation(0b11100, 0, 2) {}
-        bool process(uint32_t bits, State &state) override;
-        bool is_match(uint32_t bits) override;
-    };
+    REGISTER_OPERATION(LdrImm)
 }

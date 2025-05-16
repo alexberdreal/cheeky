@@ -101,9 +101,4 @@ namespace cheeky::ops {
 
         return true;
     }
-
-    bool Csinc::is_match(uint32_t instr) {
-        auto mask = 0x7FE00C00;
-        return (instr & mask) == 0x1A800400;
-    }
 }

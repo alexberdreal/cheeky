@@ -12,11 +12,5 @@
 */
 
 namespace cheeky::ops {
-    class Csinc : public BaseOperation {
-        using State = core::State;
-    public:
-        constexpr Csinc() : BaseOperation(0b110101, 2, 1) {}
-        bool process(uint32_t bits, State &state) override;
-        bool is_match(uint32_t instr) override;
-    };
+    REGISTER_OPERATION(Csinc)
 }
