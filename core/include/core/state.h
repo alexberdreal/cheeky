@@ -1,4 +1,6 @@
 #pragma once
+#include <core/logger.h>
+
 #include <stdint.h>
 #include <bitset>
 
@@ -16,6 +18,8 @@ namespace cheeky::core {
 
         // TODO: malloc, now just 512 * 1024 bytes (512 KB)
         std::uint8_t _stack[STACK_SIZE];
+
+        Logger _logger { "State" };
     
     public:
         // NZCV flags 

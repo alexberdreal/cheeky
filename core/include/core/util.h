@@ -46,5 +46,4 @@ constexpr inline uint32_t log2(int32_t data) {
     }
     return res;
 };
-
 }

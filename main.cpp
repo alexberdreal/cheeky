@@ -3,6 +3,7 @@
 #include <mach/thread_act.h>  // Thread function
 #include <loader/mach_object.h>
 #include <assert.h>
+#include <spdlog/spdlog.h>
 #include <session/session.h>
 
 int main(int argc, char** argv) {
@@ -11,6 +12,8 @@ int main(int argc, char** argv) {
     auto exec_path = argv[1];
     
     cheeky::session::Session sesh(argv[1]);
+
+    spdlog::shutdown();
 
     return 0;
 }

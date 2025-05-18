@@ -49,6 +49,7 @@ namespace cheeky::core {
     }
 
     void State::update_pc(uint64_t new_pc) {
+        _logger.info("update pc; old: {}, new: {}", _pc, new_pc);
         _pc = new_pc;
     }
 
