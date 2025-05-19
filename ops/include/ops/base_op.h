@@ -5,6 +5,7 @@
 
 #include <core/state.h>
 #include <core/util.h>
+#include <core/logger.h>
 
 namespace cheeky::ops {
     // TODO: move to ops utils
@@ -94,12 +95,9 @@ namespace cheeky::ops {
 
             return data;
         }
-        default: {
-            // TODO
-            std::cerr << "Shft rule default" << std::endl;
-            std::terminate();
-        }
-        }
+        default: 
+            throw std::runtime_error("shft rule default");
+    }
     } 
 
        // TODO: tests + validate rule
@@ -144,21 +142,19 @@ namespace cheeky::ops {
 
             return data;
         }
-        default: {
-            // TODO
-            std::cerr << "Shft rule default" << std::endl;
-            std::terminate();
-            break;
-        }
+        default: 
+            throw std::runtime_error("shift rule default");
         }
     } 
 
     bool handle_instruction(uint32_t instruction, core::State& state);
 }
 
-#define REGISTER_OPERATION(name)                            \
-    class name {                                            \
-        public:                                             \
-        using State = core::State;                          \
-        static bool process(uint32_t bits, State &state);   \
+#define REGISTER_OPERATION(name)                                    \
+    class name {                                                    \
+        private:                                                    \
+            using State = core::State;                              \
+            static inline cheeky::core::Logger _logger { #name };   \
+        public:                                                     \
+            static bool process(uint32_t bits, State &state);       \
     }; 

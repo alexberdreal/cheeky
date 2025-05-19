@@ -21,7 +21,7 @@ namespace cheeky::ops {
             auto& dst = state.get_vm_with_offset_64(rn + static_cast<int32_t>(uimm9));
             dst = rt;
         } else {
-            std::cerr << "fatal error: unknown size of StrImm op: " << sz << " bits: " << bits << std::endl;
+            _logger.error("unknown instruction {:x} sz", bits);
             return false;
         }
 

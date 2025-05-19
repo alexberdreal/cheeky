@@ -24,7 +24,7 @@ namespace cheeky::ops {
                 rt = src;
                 rn += simm9;
             } else {
-                std::cerr << "Unknown LdrImm instruction encoding, fatal error: " << std::hex << bits << std::endl;
+                _logger.error("unknown instruction {:x} encoding", bits);
                 return false;
             }
 
@@ -43,9 +43,8 @@ namespace cheeky::ops {
                 int32_t simm9 = (bits & get_mask_from_bits(12, 20)) >> 12;
                 auto src = state.get_vm_with_offset_32(rn + simm9);
                 return str_pre_post_idx(src, rn, rt, simm9);
-            } else 
-            {
-                std::cerr << "Unknown LdrImm instruction format, fatal error: "  << std::hex << bits << std::endl;
+            } else {
+                _logger.error("unknown instruction {:x} format", bits);
                 return false;
             }
         } else if (sz == 0b11) {
@@ -60,13 +59,12 @@ namespace cheeky::ops {
                 int64_t simm9 = (bits & get_mask_from_bits(12, 20)) >> 12;
                 auto src = state.get_vm_with_offset_64(rn + simm9);
                 return str_pre_post_idx(src, rn, rt, simm9);
-            } else 
-            {
-                std::cerr << "Unknown LdrImm instruction format, fatal error: " << std::hex << bits << std::endl;
+            } else {
+                _logger.error("unknown instruction {:x} format", bits);
                 return false;
             }
         } else {
-            std::cerr << "fatal error: unknown size of LdrImm op: " << sz << " bits: " << bits << std::endl;
+            _logger.error("unknown instruction {:x} sz", bits);
             return false;
         }
 

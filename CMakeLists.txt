@@ -18,23 +18,24 @@ include(FetchContent)
 add_executable(cheeky main.cpp)
 target_link_libraries(cheeky session)
 
+# Map LOGLEVEL to spdlog compile-time macro
 if (LOGLEVEL STREQUAL "OFF")
-    set(SPDLOG_LEVEL_MACRO "SPDLOG_LEVEL_OFF")
+    add_compile_definitions(LOGLEVEL=SPDLOG_LEVEL_OFF)
 elseif(LOGLEVEL STREQUAL "DEBUG")
-    set(SPDLOG_LEVEL_MACRO "SPDLOG_LEVEL_DEBUG")
+    add_compile_definitions(LOGLEVEL=SPDLOG_LEVEL_DEBUG)
 elseif(LOGLEVEL STREQUAL "INFO")
-    set(SPDLOG_LEVEL_MACRO "SPDLOG_LEVEL_INFO")
+    add_compile_definitions(LOGLEVEL=SPDLOG_LEVEL_INFO)
 elseif(LOGLEVEL STREQUAL "WARN")
-    set(SPDLOG_LEVEL_MACRO "SPDLOG_LEVEL_WARN")
+    add_compile_definitions(LOGLEVEL=SPDLOG_LEVEL_WARN)
 elseif(LOGLEVEL STREQUAL "ERROR")
-    set(SPDLOG_LEVEL_MACRO "SPDLOG_LEVEL_ERROR")
+    add_compile_definitions(LOGLEVEL=SPDLOG_LEVEL_ERROR)
 else()
     message(WARNING "Unknown LOGLEVEL '${LOGLEVEL}', defaulting to INFO")
-    set(SPDLOG_LEVEL_MACRO "SPDLOG_LEVEL_INFO")
+    add_compile_definitions(LOGLEVEL=SPDLOG_LEVEL_INFO)
 endif()
 
-add_compile_definitions(SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_MACRO)
-
+# Now fetch and build spdlog
+include(FetchContent)
 FetchContent_Declare(
     spdlog
     GIT_REPOSITORY https://github.com/gabime/spdlog.git

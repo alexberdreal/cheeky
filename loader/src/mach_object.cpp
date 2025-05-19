@@ -1,19 +1,20 @@
-#include <loader/mach_object.h>
 #include <cstdio> 
 #include <cstdlib>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+
 #include <core/util.h>
+#include <loader/mach_object.h>
 
 auto static get_fd_with_size(std::string_view path) -> std::pair<int, size_t> {
     int fd = open(path.data(), O_RDONLY);
     struct stat st;
     int res = fstat(fd, &st);
-    if (res != 0) {
+    if (res != 0)
         throw std::runtime_error("cannot get_fd_with_size");
-    }
+
     return { fd, st.st_size };
 }
 
@@ -79,10 +80,8 @@ namespace cheeky::loader {
             }}, lc_var);
         }
 
-        if (!alligned_text_seg_off.has_value() || !found) {
-            std::cerr << "cannot find text segment, fatal error" << std::endl;
-            std::terminate();
-        }
+        if (!alligned_text_seg_off.has_value() || !found) 
+            throw std::runtime_error("cannot find text segment, fatal error");
 
         for (const auto& lc_var : _load_commands) {
             std::visit([&, this](const auto& lc) {
@@ -92,10 +91,8 @@ namespace cheeky::loader {
             }, lc_var);
         }
 
-        if (!pc_off.has_value()) {
-            std::cerr << "No entry point load command found, fatal error" << std::endl;
-            std::terminate();
-        }
+        if (!pc_off.has_value()) 
+            throw std::runtime_error("no entry point load command found");
 
         return { found, *pc_off };
     }

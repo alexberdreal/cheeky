@@ -1,7 +1,7 @@
 #include <ops/str.h>
 
 namespace cheeky::ops {
-    
+
     static bool is_pre_post_idx(uint32_t bits) {
         return ((bits & get_mask_from_bits(21, 29)) >> 21) == 0b111000000 && ((bits & get_mask_from_bits(10, 11)) >> 10) != 0;
     }
@@ -25,7 +25,7 @@ namespace cheeky::ops {
                 dst = rt;
                 rn += simm9;
             } else {
-                std::cerr << "Unknown StrImm instruction encoding, fatal error: " << std::hex << bits << std::endl;
+                _logger.error("unknown instruction {:x} encoding", bits);
                 return false;
             }
 
@@ -46,7 +46,7 @@ namespace cheeky::ops {
                 return str_pre_post_idx(dst, rn, rt, simm9);
             } else 
             {
-                std::cerr << "Unknown StrImm instruction format, fatal error: " << std::hex << bits << std::endl;
+                _logger.error("unknown instruction {:x} format", bits);
                 return false;
             }
         } else if (sz == 0b11) {
@@ -63,11 +63,11 @@ namespace cheeky::ops {
                 return str_pre_post_idx(dst, rn, rt, simm9);
             } else 
             {
-                std::cerr << "Unknown StrImm instruction format, fatal error: " << std::hex << bits << std::endl;
+                _logger.error("unknown instruction {:x} format", bits);
                 return false;
             }
         } else {
-            std::cerr << "fatal error: unknown size of StrImm op: " << sz << " bits: " << bits << std::endl;
+            _logger.error("unknown instruction {:x} sf", bits);
             return false;
         }
 

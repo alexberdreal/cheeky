@@ -1,8 +1,10 @@
 #include <core/state.h>
+#include <core/logger.h>
 #include <ops/ops.h>
 
 namespace cheeky::ops {
 bool handle_instruction(uint32_t instruction, core::State& state) {
+static core::Logger logger("DecisionTree");
 switch (instruction & 0x1c000000) {
 case 0x10000000: {
 switch (instruction & 0x1f000000) {
@@ -21,7 +23,7 @@ case 0x71000000: {
 return SubsImm::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
@@ -33,7 +35,7 @@ case 0x10000000: {
 return Adrp::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
@@ -49,7 +51,7 @@ case 0x94000000: {
 return Bl::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
@@ -61,7 +63,7 @@ case 0x54000000: {
 return Ret::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
@@ -83,7 +85,7 @@ case 0xb8000000: {
 return Stur::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
@@ -103,7 +105,7 @@ case 0xb8400000: {
 return Stur::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
@@ -112,7 +114,7 @@ case 0x39400000: {
 return LdrImm::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
@@ -131,7 +133,7 @@ case 0x28c00000: {
 return Ldp::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
@@ -151,19 +153,19 @@ case 0x29400000: {
 return Ldp::process(instruction, state);
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }
 }
 default: {
-std::cerr << "Instruction is not supported: " << std::hex << instruction;
+logger.error("Instruction is not supported: {:x}", instruction);
 return false;
 }
 }

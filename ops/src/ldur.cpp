@@ -20,7 +20,7 @@ namespace cheeky::ops {
             auto src = state.get_vm_with_offset_64(rn + static_cast<int32_t>(uimm9));
             rt = src;
         } else {
-            std::cerr << "fatal error: unknown size of Ldur op: " << sz << " bits: " << bits << std::endl;
+            _logger.error("unknown {:x} instruction sz", bits);
             return false;
         }
 

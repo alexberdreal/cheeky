@@ -1,9 +1,11 @@
 #include <assert.h>
+#include <string_view>
 
 #include <core/state.h>
-#include <iostream>
 
 namespace cheeky::core {
+    State::State(std::string_view name) : BaseLogger(name) {}
+
     // NZCV flags
 
     void State::set_n_flag(bool flag) {
@@ -41,6 +43,7 @@ namespace cheeky::core {
     // PC register
 
     void State::advance_pc() {
+        _logger.debug("advance pc");
         _pc++;
     }
 
@@ -49,7 +52,7 @@ namespace cheeky::core {
     }
 
     void State::update_pc(uint64_t new_pc) {
-        _logger.info("update pc; old: {}, new: {}", _pc, new_pc);
+        _logger.debug("update pc; old: {}, new: {}", _pc, new_pc);
         _pc = new_pc;
     }
 
@@ -68,18 +71,16 @@ namespace cheeky::core {
     // Virtual memory accessors 
 
     uint32_t& State::get_vm_with_offset_32(int32_t offset) {
-        if (offset < 0 || offset > STACK_SIZE) {
-            std::cerr << "fatal error: stack overflow" << std::endl;
-            std::terminate(); 
-        } 
+        if (offset < 0 || offset > STACK_SIZE) 
+            throw std::runtime_error("fatal error: stack overflow");
+
         return *reinterpret_cast<uint32_t*>(&_stack[offset]);
     }
 
     uint64_t& State::get_vm_with_offset_64(int64_t offset) {
-        if (offset < 0 || offset > STACK_SIZE) {
-            std::cerr << "fatal error: stack overflow" << std::endl;
-            std::terminate(); 
-        } 
+        if (offset < 0 || offset > STACK_SIZE)
+            throw std::runtime_error("fatal error: stack overflow");
+        
         return *reinterpret_cast<uint64_t*>(&_stack[offset]);
     }
 }

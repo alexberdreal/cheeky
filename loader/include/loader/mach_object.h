@@ -8,6 +8,8 @@
 
 #include <mach-o/loader.h>
 
+#include <core/logger.h>
+
 namespace cheeky::loader {
     class MachObject {
 

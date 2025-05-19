@@ -44,7 +44,7 @@ def generate_decision_tree(out_file, group):
             generate_decision_tree(out_file, subgroups)
         out_file.write("}\n")
     out.write("default: {\n")
-    out.write("std::cerr << \"Instruction is not supported: \" << std::hex << instruction;\n")
+    out.write("logger.error(\"Instruction is not supported: {:x}\", instruction);\n")
     out.write("return false;\n}\n}\n")
 global head_group 
 
@@ -65,8 +65,10 @@ with open("patterns.txt", "r") as file:
 
 with open(sys.argv[1], "w") as out:
     out.write("#include <core/state.h>\n")
+    out.write("#include <core/logger.h>\n")
     out.write("#include <ops/ops.h>\n\n")
     out.write("namespace cheeky::ops {\n")
     out.write("bool handle_instruction(uint32_t instruction, core::State& state) {\n")
+    out.write("static const core::Logger logger(\"DecisionTree\");\n")
     generate_decision_tree(out, head_group)
     out.write("}\n}\n")

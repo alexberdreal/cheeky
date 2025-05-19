@@ -11,6 +11,6 @@
     ADD <Xd|SP>, <Xn|SP>, #<imm>{, <shift>}
 */
 
-namespace cheeky::ops {\
+namespace cheeky::ops {
     REGISTER_OPERATION(AddsImm)
 }

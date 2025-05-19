@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <ops/ldp.h>
 
 namespace cheeky::ops {
@@ -29,7 +30,7 @@ namespace cheeky::ops {
                 rt2 = src2;
                 rn += simm9;
             } else {
-                std::cerr << "Unknown Ldp instruction encoding, fatal error: " << std::hex << bits << std::endl;
+                _logger.error("unknown instruction encoding for {:x}", bits);
                 return false;
             }
 
@@ -52,7 +53,7 @@ namespace cheeky::ops {
                 return str_pre_post_idx(src1, src2, rn, rt1, rt2, simm);
             } else 
             {
-                std::cerr << "Unknown Ldp instruction format, fatal error: " << std::hex << bits << std::endl;
+                _logger.error("unknown instruction {:x} format", bits);
                 return false;
             }
         } else if (sz == 0b10) {    // 64-bit version
@@ -71,11 +72,11 @@ namespace cheeky::ops {
                 return str_pre_post_idx(src1, src2, rn, rt1, rt2, simm);
             } else 
             {
-                std::cerr << "Unknown Ldp instruction format, fatal error: " << std::hex << bits << std::endl;
+                _logger.error("unknown instruction {:x} format", bits);
                 return false;
             }
         } else {
-            std::cerr << "fatal error: unknown size of Ldp op: " << sz << " bits: " << bits << std::endl;
+            _logger.error("unknown instruction {:x} sz", bits);
             return false;
         }
 

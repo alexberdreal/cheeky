@@ -7,7 +7,7 @@
 const size_t STACK_SIZE = 512 * 1024;
 
 namespace cheeky::core {
-    class State {
+    class State : public virtual BaseLogger {
     private:
         /// General-purpose registers + fp (x29) + lr (x30) + sp / zr (x31)
         uint64_t _r[32];
@@ -19,9 +19,9 @@ namespace cheeky::core {
         // TODO: malloc, now just 512 * 1024 bytes (512 KB)
         std::uint8_t _stack[STACK_SIZE];
 
-        Logger _logger { "State" };
-    
     public:
+        State(std::string_view name);
+
         // NZCV flags 
 
         void set_n_flag(bool flag);
